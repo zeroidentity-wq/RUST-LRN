@@ -65,22 +65,32 @@
 ## Structura proiectului
 
 ```
-RUST-LRN/
+RUST-LRN/                             # Workspace root
 ├── src/
 │   ├── main.rs                       # Placeholder cu lista modulelor
-│   └── bin/                          # Cate un fisier per modul
+│   └── bin/                          # Lectii (scrise de Claude)
 │       ├── 01_ownership_borrowing.rs # cargo run --bin 01_ownership_borrowing
 │       ├── 02_structs.rs             # cargo run --bin 02_structs
 │       └── ...
+├── exercitii/                        # Sub-proiect Cargo — spatiul utilizatorului
+│   ├── Cargo.toml
+│   └── src/
+│       ├── main.rs
+│       └── bin/                      # Exercitiile utilizatorului
+│           ├── ex_01_ownership.rs    # cargo run --bin ex_01_ownership
+│           ├── ex_02_structs.rs      # cargo run --bin ex_02_structs
+│           └── ...
 ├── notes/                            # Notite markdown per modul
 │   ├── 01_ownership_borrowing.md
 │   ├── 02_structs.md
 │   └── ...
 ├── CLAUDE.md
-└── Cargo.toml
+└── Cargo.toml                        # Workspace manifest
 ```
 
-Conventia de denumire: `NN_nume_subiect` — acelasi prefix pentru `.rs` si `.md`.
+Conventia de denumire:
+- Lectii (Claude): `NN_nume_subiect.rs` in `src/bin/`
+- Exercitii (utilizator): `ex_NN_nume_subiect.rs` in `exercitii/src/bin/`
 
 ## Starea curenta a sesiunii
 

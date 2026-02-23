@@ -1,3 +1,6 @@
+[workspace]
+members = [".", "exercitii"]
+
 [package]
 name = "RUST-LRN"
 version = "0.1.0"
