@@ -204,23 +204,251 @@ Borrowing mutabil (&mut):
 
 ---
 
-## Exercitii
-
-**1.** De ce da eroare codul urmator? Cum il repari?
-```rust
-fn main() {
-    let s1 = String::from("test");
-    let s2 = s1;
-    println!("{}", s1);
-}
-```
-
-**2.** Scrie o functie `prima_litera(s: &String) -> char` care
-returneaza primul caracter dintr-un String, fara sa mute proprietatea.
-
-**3.** Scrie o functie `adauga_exclamare(s: &mut String)` care
-adauga `"!"` la sfarsitul unui String.
+## Exercitii si solutii
 
 ---
 
-*Nota: Fisier generat in sesiunea din 2026-02-23*
+### Exercitiul 1 — Move vs Borrow
+
+De ce da eroare codul urmator? Cum il repari?
+
+```rust
+fn main() {
+    let s1 = String::from("test");
+    let s2 = s1;        // s1 se muta in s2 — s1 nu mai e valid
+    println!("{}", s1); // EROARE: s1 a fost mutat
+}
+```
+
+**Eroare**: `s1` si-a pierdut proprietatea prin move la `s2`. Nu poti folosi o variabila dupa ce a fost mutata.
+
+**Solutie**: Foloseste `&` pentru imprumut in loc de move.
+
+```rust
+fn main() {
+    let mut s1 = String::from("Rust");
+    let s2 = &s1;               // imprumut, nu move
+    println!("{}, {}", s1, s2); // ambele valide
+}
+```
+
+---
+
+### Exercitiul 2 — `prima_litera`
+
+Scrie o functie `prima_litera(s: &String) -> char` care returneaza primul caracter, fara sa mute proprietatea.
+
+```rust
+fn prima_litera(s: &String) -> char {
+    s.chars().next().unwrap()
+}
+```
+
+**Concepte**: `&String` — imprumut imutabil, proprietarul nu se schimba. `.chars().next()` returneaza primul caracter ca `Option<char>`, `.unwrap()` extrage valoarea.
+
+---
+
+### Exercitiul 3 — `adauga_exclamare`
+
+Scrie o functie `adauga_exclamare(s: &mut String)` care adauga `"!"` la sfarsit.
+
+```rust
+fn adauga_exclamare(s: &mut String) {
+    s.push_str("!");
+}
+```
+
+**Concepte**: `&mut String` — imprumut mutabil. Variabila din `main` trebuie declarata cu `mut`.
+
+---
+
+### Exercitiul 4 — Doua referinte mutabile (eroare)
+
+Codul urmator nu compileaza. Gaseste erorile si repara-l.
+
+```rust
+// Cod eronat:
+fn main() {
+    let mut s = String::from("hello");
+    let r1 = &mut s;
+    let r2 = &mut s;  // EROARE: al doilea &mut activ simultan
+    println!("{} {}", r1, r2);
+}
+```
+
+**Erori**:
+- Nu poti avea **doua `&mut`** active simultan
+- Nu poti avea **`&mut` si `&`** active simultan
+
+**Solutie**: Folosesti o singura referinta mutabila si o eliberezi inainte de a crea alta.
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+    let r1 = &mut s;
+    r1.push_str(", hello");
+    // r1 nu mai e folosit dupa aceasta linie — borrow-ul se elibereaza
+    println!("{}", s);
+}
+```
+
+---
+
+### Exercitiul 5 — `dublura`
+
+Scrie o functie `dublura(s: &mut String)` care dubleaza continutul: `"Rust"` → `"RustRust"`.
+
+```rust
+fn dublura(s: &mut String) {
+    let original = s.clone(); // salvezi copia INAINTE sa modifici
+    s.push_str(&original);    // adaugi copia la sfarsitul originalului
+}
+```
+
+**Greseala comuna**: `s.clone().push_str(s)` — clone-ul e temporar si se arunca imediat, `s` ramane nemodificat.
+
+---
+
+### Exercitiul 6 — `prima_si_ultima`
+
+Scrie o functie `prima_si_ultima(s: &String) -> (char, char)` care returneaza primul si ultimul caracter.
+
+```rust
+fn prima_si_ultima(s: &String) -> (char, char) {
+    let prima = s.chars().next().unwrap();
+    let ultima = s.chars().last().unwrap();
+    (prima, ultima)
+}
+```
+
+**Exemplu**: `"Rust"` → `('R', 't')`
+
+---
+
+### Exercitiul 7 — Dangling reference (referinta suspendata)
+
+Codul urmator nu compileaza. Explica de ce si repara-l.
+
+```rust
+// Cod eronat:
+fn main() {
+    let referinta;
+    {
+        let s = String::from("hello");
+        referinta = &s;
+    } // s iese din scope si e sters (drop)
+    println!("{}", referinta); // EROARE: referinta pointeaza la memorie eliberata
+}
+```
+
+**Eroare**: `s` e sters cand `{}` se inchide. `referinta` ar pointa la memorie invalida — Rust nu permite asta (dangling reference).
+
+**Solutie**: `s` trebuie sa traiasca cel putin cat `referinta`.
+
+```rust
+fn main() {
+    let referinta;
+    let s = String::from("hello"); // s in acelasi scope cu referinta
+    referinta = &s;
+    println!("{}", referinta); // OK
+}
+```
+
+---
+
+### Exercitiul 8 — `inverseaza`
+
+Scrie o functie `inverseaza(s: &mut String)` care inverseaza sirul in loc: `"Rust"` → `"tsuR"`.
+
+```rust
+fn inverseaza(s: &mut String) {
+    *s = s.chars().rev().collect::<String>();
+}
+```
+
+**Concepte**:
+- `*s = ...` — dereferentiere: scrii la adresa la care pointeaza `s`
+- `.chars().rev()` — iteratorul caracterelor, inversat
+- `.collect::<String>()` — aduna caracterele inapoi intr-un `String`
+
+---
+
+### Exercitiul 9 — `proceseaza` (ownership complet)
+
+Scrie o functie `proceseaza(s: String) -> String` care preia proprietatea, adauga `" [procesat]"` si returneaza proprietatea.
+
+```rust
+fn proceseaza(s: String) -> String {
+    let mut de_procesat = s;            // preia ownership
+    de_procesat.push_str(" [procesat]");
+    de_procesat                         // returneaza ownership
+}
+```
+
+**Raspuns la intrebarea din exercitiu**: Dupa `let rezultat = proceseaza(s)`, variabila `s` **nu mai poate fi folosita** — ownership-ul a fost mutat in functie si returnat in `rezultat`.
+
+**Exemplu**: `"date"` → `"date [procesat]"`
+
+---
+
+*Nota: Fisier generat in sesiunea din 2026-02-23. Exercitii completate in sesiunea din 2026-02-24.*
+
+---
+
+## Exercitii suplimentare
+
+Fisier de lucru: `exercitii/src/bin/ex_01b_ownership_extra.rs`
+Rulare: `cargo run --bin ex_01b_ownership_extra`
+
+---
+
+### Serie 1 — Dificultate mica
+
+**S1-A.** Codul urmator nu compileaza. Explica de ce si repara-l fara sa schimbi functia `afiseaza`.
+
+```rust
+fn main() {
+    let s = String::from("buna ziua");
+    afiseaza(s);
+    println!("Original: {}", s); // de ce da eroare?
+}
+
+fn afiseaza(text: String) {
+    println!("{}", text);
+}
+```
+
+**S1-B.** Scrie o functie `este_goala(s: &String) -> bool` care returneaza `true` daca string-ul nu are niciun caracter.
+- `"hello"` → `false`
+- `""` → `true`
+- Indiciu: `.is_empty()` sau `.len() == 0`
+
+**S1-C.** Scrie o functie `lungime(s: &String) -> usize` care returneaza numarul de caractere (nu bytes).
+- `"Rust"` → `4`
+- Indiciu: `.chars().count()` numara caractere, `.len()` numara bytes — difera pentru caractere speciale.
+
+---
+
+### Serie 2 — Dificultate medie
+
+**S2-A.** Scrie o functie `fa_majuscule(s: &mut String)` care transforma tot textul in majuscule, in loc.
+- `"rust"` → `"RUST"`
+- Indiciu: `.to_uppercase()` returneaza un String nou — cum il atribui inapoi?
+
+**S2-B.** Scrie o functie `concateneaza(s1: &String, s2: &String) -> String` care returneaza un String nou format din `s1 + " " + s2`, fara sa mute proprietatea niciunuia.
+- `"buna"`, `"ziua"` → `"buna ziua"`
+- Indiciu: `format!("{} {}", s1, s2)`
+
+**S2-C.** Codul urmator nu compileaza. Explica de ce si propune doua variante de rezolvare diferite.
+
+```rust
+fn creeaza_string() -> &String {
+    let s = String::from("hello");
+    &s
+}
+
+fn main() {
+    let r = creeaza_string();
+    println!("{}", r);
+}
+```

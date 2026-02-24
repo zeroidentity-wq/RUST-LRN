@@ -28,7 +28,7 @@
 ### Progresia invatarii
 
 #### Faza 1 — Fundamentele Rust (in curs)
-- [ ] Ownership si borrowing (conceptul de baza al Rust)
+- [x] Ownership si borrowing (conceptul de baza al Rust)
 - [ ] Functii, parametri, return values
 - [ ] Structuri (`struct`) si implementari (`impl`)
 - [ ] Enumeratii (`enum`) si pattern matching
@@ -94,6 +94,8 @@ Conventia de denumire:
 
 ## Starea curenta a sesiunii
 
-**Urmatorul subiect de abordat**: Ownership si borrowing in Rust.
+**Subiect curent**: Functii, parametri si return values.
+**Subiect anterior finalizat**: Ownership si borrowing (sesiunea 2026-02-24).
+**Nota**: Din cand in cand se introduc quizuri scurte din capitolul anterior (ownership & borrowing).
 
 **Nota**: Actualizeaza sectiunea "Starea curenta" la sfarsitul fiecarei sesiuni pentru a tine evidenta progresului.

@@ -13,6 +13,17 @@ fn main() {
     let s2 = String::from("Luung");
     let exercitiu6 = prima_si_ultima(&s2);
     println!("{:?}", exercitiu6);
+
+    let mut s3 = String::from("DeInversat");
+    inverseaza(&mut s3);
+    println!("s3 inversat: {}", s3);
+
+    let s4 = String::from("De procesat: ");
+    let s4_nou = proceseaza(s4);
+    println!("s4 procesat: {}", s4_nou);
+
+    main_ex7();
+
 }
 
 //  2. Scrie o funcție prima_litera(s: &String) -> char care returnează primul caracter dintr-un String, fara sa mute proprietatea.
@@ -25,9 +36,6 @@ fn adauga_exclamare(s: &mut String) {
     s.push_str("!");
 }
 
-// ---------------------------------------------------------------------------
-// EXERCITII NOI
-// ---------------------------------------------------------------------------
 
 // 4. Codul de mai jos nu compilează. Găsește TOATE erorile, explica-le
 //    in comentarii si repara codul ca sa afișeze: "hello hello"
@@ -62,29 +70,26 @@ fn prima_si_ultima(s: &String) -> (char, char) {
     (prima, ultima)
 }
 
-// ---------------------------------------------------------------------------
-// EXERCITII ROUND 3
-// ---------------------------------------------------------------------------
-
 // 7. Codul de mai jos nu compileaza. Explica in comentarii DE CE apare
 //    eroarea, apoi repara-l.
 //
-// fn main_ex7() {
-//     let referinta;
-//     {
-//         let s = String::from("hello");
-//         referinta = &s;
-//     }
-//     println!("{}", referinta);
-// }
+fn main_ex7() {
+    let referinta;
+    let s = String::from("hello");
+    referinta = &s;
+
+    println!("{}", referinta);
+}
+
+// s iese din scope si face drop, si nu poate fi folosit mai departe de catre referinta
+// ma gandesc sa scot scope si sa fie vizibil in main
 
 // 8. Scrie o functie inverseaza(s: &mut String) care inverseaza sirul
 //    in loc. Exemplu: "Rust" devine "tsuR".
 //    Indiciu: s.chars().rev().collect::<String>() iti da un String inversat.
-//    Cum atribui rezultatul inapoi lui *s ?
+//    *s inseamna "scrie la adresa la care pointeaza s".
 fn inverseaza(s: &mut String) {
-    // scrie codul aici
-    todo!()
+    *s=s.chars().rev().collect::<String>();
 }
 
 // 9. Scrie o functie proceseaza(s: String) -> String care:
@@ -94,6 +99,9 @@ fn inverseaza(s: &mut String) {
 //    Testeaza: s = "date" => "date [procesat]"
 //    Dupa apel, variabila originala din main() mai poate fi folosita?
 fn proceseaza(s: String) -> String {
-    // scrie codul aici
-    todo!()
+    // fac o var mutabila care sa preia pe s si întorc rezultatul
+    let mut de_procesat = s;
+    de_procesat.push_str(" [procesat]");
+    de_procesat
+
 }
