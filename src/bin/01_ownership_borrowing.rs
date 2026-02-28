@@ -1,6 +1,7 @@
 // ============================================================
 // Ownership & Borrowing — cod demonstrativ
 // Citeste notitele in: notes/01_ownership_borrowing.md
+// Rulare: cargo run --bin 01_ownership_borrowing
 // ============================================================
 
 fn main() {
@@ -11,52 +12,51 @@ fn main() {
 }
 
 // --- MOVE ---
-// Proprietatea se muta cand atribui sau trimiti la o functie
+// Cand dai item-ul unui alt jucator, tu nu il mai ai
 fn demo_move() {
     println!("=== MOVE ===");
 
-    let s1 = String::from("hello");
-    let s2 = s1; // s2 acum detine OWNER
-    // println!("s1={}",s1); EROARE: s1 nu mai este proprietar
-    println!("s={}",s2); // s2 detine hello
+    let jucator1 = String::from("Excalibur");
+    let jucator2 = jucator1; // item mutat in inventarul lui jucator2
+    // println!("{}", jucator1); // EROARE: jucator1 nu mai are item-ul
+    println!("jucator2 are: {}", jucator2);
 }
 
 // --- COPY ---
-// Tipurile simple (i32, bool, f64, char) se copiaza automat
+// Gold-ul si consumabilele se copiaza automat (tipuri simple: i32, bool, etc.)
 fn demo_copy() {
-    println!("\n=== COPY ===");
+    println!("\n=== COPY (gold) ===");
 
-    let x = 55;
-    let y = x; // Tipurile simple implementeaza COPY
-    println!("x: {}, y: {}", x,y);
+    let gold = 500;
+    let taxa = gold; // copie automata — gold ramane valid
+    println!("gold: {}, taxa: {}", gold, taxa); // ambele valide
 }
 
 // --- BORROWING IMUTABIL ---
-// Imprumutam cu &, proprietarul ramane valid
+// Imprumuti item-ul coechipierului sa-l inspecteze — el nu il primeste
 fn demo_borrowing() {
     println!("\n=== BORROWING (&) ===");
-    // calculeaza lungimea unui string imprumutat
-    let s = String::from("Rust");
-    let nr_caractere = calculeaz_lungime(&s);
-    println!("nr de caractere: {}", nr_caractere);
+
+    let sabie = String::from("Excalibur");
+    let lungime = inspecteaza_item(&sabie); // imprumut, nu move
+    println!("Sabia '{}' are {} caractere", sabie, lungime); // sabia e inca a noastra
 }
 
-fn calculeaz_lungime(st: &String) -> i32 {
-    let lungime:i32 = st.len() as i32;
-    lungime
+fn inspecteaza_item(item: &String) -> usize {
+    item.len() // returnam lungimea, fara sa retinem ownership-ul
 }
 
 // --- BORROWING MUTABIL ---
-// Imprumutam cu &mut ca sa modificam
+// Dai item-ul la un blacksmith sa-l upgradeze — il primesti inapoi modificat
 fn demo_mutable_borrow() {
     println!("\n=== BORROWING MUTABIL (&mut) ===");
 
-    let mut s:String = String::from("Adauga aici ");
-    println!("s= {}", s);
-    adauga_text(&mut s);
-    println!("s= {}", s);
-}
-fn adauga_text(text: &mut String ){
-    text.push_str(" am adaugat!");
+    let mut sabie = String::from("Excalibur");
+    println!("Inainte de upgrade: {}", sabie);
+    upgrade_item(&mut sabie); // imprumut mutabil — blacksmith-ul modifica item-ul
+    println!("Dupa upgrade: {}", sabie);
 }
 
+fn upgrade_item(item: &mut String) {
+    item.push_str(" +1");
+}

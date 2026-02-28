@@ -15,49 +15,56 @@ Rust nu are Garbage Collector. In schimb, are un set de **reguli** verificate la
 Daca le respecti — codul e sigur si rapid. Daca nu — codul **nu compileaza**.
 
 ---
-## Regula 1 — Fiecare valoare are un singur proprietar (owner)
+
+## Regula 1 — Fiecare item are un singur proprietar (owner)
+
+> **Analogie**: Intr-un RPG, o sabie legendara poate fi detinuta de **un singur jucator**.
+> Nu exista doua copii ale aceluiasi item unic — daca tu il ai, altcineva nu il poate avea simultan.
 
 ```rust
-let s = String::from("hello"); // `s` este proprietarul acestui String
+let sabie = String::from("Excalibur"); // `sabie` este proprietarul
 ```
 
-- `s` **detine** valoarea `"hello"` in memorie.
-- Cand `s` iese din scope (blocul `{}` se inchide), memoria e **eliberata automat**.
+- `sabie` **detine** valoarea `"Excalibur"` in memorie.
+- Cand `sabie` iese din scope (se inchide `{}`), item-ul e **sters automat (drop)**.
 
 ```rust
 fn main() {
-    let s = String::from("hello"); // s intra in scope, memorie alocata
-    println!("{}", s);
-} // s iese din scope, memorie eliberata automat (drop)
+    let sabie = String::from("Excalibur"); // item intrat in inventar
+    println!("{}", sabie);
+} // sabie iese din scope — item sters automat
 ```
 
 ---
 
 ## Regula 2 — Poate exista un singur proprietar la un moment dat (Move)
 
-Daca atribui o valoare altei variabile, **proprietatea se muta (move)**.
+Daca dai item-ul unui alt jucator, **tu nu il mai ai**.
 
 ```rust
 fn main() {
-    let s1 = String::from("hello");
-    let s2 = s1; // proprietatea se muta de la s1 la s2
+    let jucator1 = String::from("Excalibur");
+    let jucator2 = jucator1; // item mutat in inventarul lui jucator2
 
-    // println!("{}", s1); // EROARE! s1 nu mai este valid
-    println!("{}", s2);    // OK
+    // println!("{}", jucator1); // EROARE! jucator1 nu mai are item-ul
+    println!("{}", jucator2);    // OK
 }
 ```
 
-> **Analogie**: E ca si cum ai da cuiva un document original.
-> Dupa ce i l-ai dat, tu nu il mai ai.
+> Dupa ce ai dat sabia, inventarul tau e gol. Nu poti echipa ceva ce nu mai ai.
 
-### Atentie: tipurile simple (i32, bool, f64, char) se **copiaza**, nu se muta
+---
+
+## Tipurile simple — Gold si consumabile
+
+Gold-ul se copiaza automat — dai 50g cuiva si tot mai ai 50g la tine.
+Asa functioneaza tipurile simple (`i32`, `bool`, `f64`, `char`) in Rust.
 
 ```rust
 fn main() {
-    let x = 5;
-    let y = x; // x se copiaza, ambele sunt valide
-
-    println!("x = {}, y = {}", x, y); // OK
+    let gold = 100;
+    let taxa = gold; // copie automata — gold ramane valid
+    println!("gold: {}, taxa: {}", gold, taxa); // OK
 }
 ```
 
@@ -65,95 +72,80 @@ Aceste tipuri implementeaza trait-ul `Copy` — sunt mici si stau pe **stack**, 
 
 ---
 
-## Regula 3 — Cand proprietarul iese din scope, valoarea e stearsa
+## Regula 3 — Cand proprietarul iese din scope, item-ul e sters
 
 ```rust
 fn main() {
     {
-        let s = String::from("in bloc");
-        println!("{}", s); // OK
-    } // s iese din scope, memorie eliberata
+        let armura = String::from("Armura de Fier");
+        println!("{}", armura); // OK
+    } // armura iese din scope — item sters din memorie
 
-    // println!("{}", s); // EROARE! s nu mai exista
+    // println!("{}", armura); // EROARE! armura nu mai exista
 }
 ```
 
 ---
 
-## Move in functii
+## Move in functii — Dai item-ul unui NPC
 
-Cand trimiti o valoare la o functie, **proprietatea se muta** in acea functie.
+Cand trimiti un item la o functie, **proprietatea se muta** in acea functie.
 
 ```rust
 fn main() {
-    let s = String::from("hello");
-    preia_proprietatea(s); // s se muta in functie
+    let sabie = String::from("Excalibur");
+    npc_primeste(sabie); // sabia pleaca la NPC
 
-    // println!("{}", s); // EROARE! s nu mai apartine lui main
+    // println!("{}", sabie); // EROARE! sabia nu mai e la tine
 }
 
-fn preia_proprietatea(text: String) {
-    println!("{}", text);
-} // text iese din scope, memorie eliberata
+fn npc_primeste(item: String) {
+    println!("Am primit: {}", item);
+} // item sters — NPC-ul a distrus item-ul la final
 ```
 
-Aceasta e incomod. Solutia? **Borrowing**.
+Aceasta e incomod. Solutia? **Borrowing** — imprumuti, nu dai.
 
 ---
 
-## Borrowing — Imprumutarea valorilor
+## Borrowing — Imprumuti item-ul unui coechipier
 
-In loc sa muti proprietatea, poti **imprumuta** valoarea cu `&`.
+In loc sa muti ownership-ul, poti **imprumuta** item-ul cu `&`.
 
 ```rust
 fn main() {
-    let s = String::from("hello");
-    calculeaza_lungime(&s); // imprumutam, nu mutam
+    let sabie = String::from("Excalibur");
+    inspecteaza(&sabie); // coechipierul o inspecteaza, nu o primeste
 
-    println!("{}", s); // OK! s inca ne apartine
+    println!("Sabia e inca la mine: {}", sabie); // OK!
 }
 
-fn calculeaza_lungime(text: &String) -> usize {
-    text.len()
-} // text (referinta) iese din scope, dar valoarea NU e stearsa
+fn inspecteaza(item: &String) {
+    println!("Inspecteaza: {}", item);
+} // referinta expira — sabia ramane la proprietar
 ```
 
-> **Analogie**: E ca si cum ai imprumuta cartea cuiva. Ei tot o detin,
-> tu o citesti si o returnezi.
+> **Analogie**: Dai sabia coechipierului s-o vada. El o inspecteaza, dar nu o detine.
+> Ti-o returneaza automat dupa.
 
 ### Reguli pentru referinte
 
-1. Poti avea **oricate referinte imutabile** (`&T`) simultan.
-2. Sau **o singura referinta mutabila** (`&mut T`) — dar nu amandoua odata.
-
-```rust
-fn main() {
-    let mut s = String::from("hello");
-
-    let r1 = &s;     // OK — referinta imutabila
-    let r2 = &s;     // OK — inca o referinta imutabila
-    println!("{} {}", r1, r2);
-
-    // Dupa ce r1 si r2 nu mai sunt folosite, putem face:
-    let r3 = &mut s; // OK — referinta mutabila
-    r3.push_str(", world");
-    println!("{}", r3);
-}
-```
+1. Poti imprumuta de **oricate ori** imutabil (`&T`) simultan.
+2. Sau **o singura data** mutabil (`&mut T`) — dar nu impreuna cu alte referinte.
 
 ---
 
-## Referinta mutabila — modificarea prin imprumut
+## Referinta mutabila — Coechipierul face upgrade la item
 
 ```rust
 fn main() {
-    let mut s = String::from("hello");
-    adauga_text(&mut s); // imprumut mutabil
-    println!("{}", s);   // "hello, world"
+    let mut sabie = String::from("Excalibur");
+    upgrade_item(&mut sabie); // imprumut cu permisiunea de a modifica
+    println!("{}", sabie);    // "Excalibur +1"
 }
 
-fn adauga_text(text: &mut String) {
-    text.push_str(", world");
+fn upgrade_item(item: &mut String) {
+    item.push_str(" +1");
 }
 ```
 
@@ -161,16 +153,15 @@ fn adauga_text(text: &mut String) {
 
 ## &mut necesita o variabila mutabila
 
-Nu poti face `&mut` catre o variabila imutabila — variabila trebuie declarata cu `mut`.
-
-> **Analogie**: Un document laminat (imutabil) nu poate fi modificat chiar daca dai cuiva un pix (`&mut`). Foaia trebuie sa fie normala (`mut`) de la inceput.
+Nu poti face upgrade unui item daca e "blocat" (imutabil).
+Item-ul trebuie declarat `mut` de la inceput.
 
 ```rust
-let s = String::from("hello");      // imutabila
-let r = &mut s;                     // EROARE — s nu e mut
+let sabie = String::from("Excalibur");  // blocat
+let r = &mut sabie;                      // EROARE — nu poate fi modificat
 
-let mut s = String::from("hello");  // mut obligatoriu
-let r = &mut s;                     // OK
+let mut sabie = String::from("Excalibur"); // deblocat
+let r = &mut sabie;                         // OK
 ```
 
 ---
@@ -178,16 +169,16 @@ let r = &mut s;                     // OK
 ## Rezumat vizual
 
 ```
-Ownership (proprietate):
-  let s1 = String::from("hello");  →  s1 detine "hello"
-  let s2 = s1;                      →  s2 detine "hello", s1 invalid
+Ownership:
+  let jucator1 = String::from("Excalibur");  →  jucator1 detine item-ul
+  let jucator2 = jucator1;                   →  jucator2 il detine, jucator1 nu mai are nimic
 
 Borrowing imutabil (&):
-  let r = &s1;   →  r imprumuta, s1 ramane proprietar
-                    pot exista mai multe &s1 simultan
+  let r = &sabie;     →  r il inspecteaza, sabie ramane proprietar
+                         pot exista mai multi &sabie simultan
 
 Borrowing mutabil (&mut):
-  let r = &mut s1;  →  r poate modifica, dar e SINGURA referinta activa
+  let r = &mut sabie; →  r poate modifica, dar e SINGURA referinta activa
 ```
 
 ---
@@ -196,8 +187,8 @@ Borrowing mutabil (&mut):
 
 | # | Regula |
 |---|--------|
-| 1 | Fiecare valoare are **un singur owner** |
-| 2 | Cand owner-ul iese din scope, valoarea e **stearsa** |
+| 1 | Fiecare item are **un singur owner** |
+| 2 | Cand owner-ul iese din scope, item-ul e **sters automat** |
 | 3 | Poti imprumuta cu `&` (imutabil) sau `&mut` (mutabil) |
 | 4 | Nu poti avea `&mut` si `&` active **in acelasi timp** |
 | 5 | Nu poti avea mai mult de **un `&mut`** activ simultan |
@@ -206,29 +197,27 @@ Borrowing mutabil (&mut):
 
 ## Exercitii si solutii
 
----
-
 ### Exercitiul 1 — Move vs Borrow
 
 De ce da eroare codul urmator? Cum il repari?
 
 ```rust
 fn main() {
-    let s1 = String::from("test");
-    let s2 = s1;        // s1 se muta in s2 — s1 nu mai e valid
-    println!("{}", s1); // EROARE: s1 a fost mutat
+    let sabie = String::from("Excalibur");
+    let alt_jucator = sabie;      // sabia e mutata
+    println!("{}", sabie);        // EROARE: sabia nu mai e la tine
 }
 ```
 
-**Eroare**: `s1` si-a pierdut proprietatea prin move la `s2`. Nu poti folosi o variabila dupa ce a fost mutata.
+**Eroare**: `sabie` si-a pierdut ownership prin move. Nu poti folosi un item dupa ce l-ai dat.
 
-**Solutie**: Foloseste `&` pentru imprumut in loc de move.
+**Solutie**: Imprumuta cu `&`.
 
 ```rust
 fn main() {
-    let mut s1 = String::from("Rust");
-    let s2 = &s1;               // imprumut, nu move
-    println!("{}, {}", s1, s2); // ambele valide
+    let sabie = String::from("Excalibur");
+    let alt_jucator = &sabie;               // imprumut, nu move
+    println!("{}, {}", sabie, alt_jucator); // ambele valide
 }
 ```
 
@@ -236,7 +225,7 @@ fn main() {
 
 ### Exercitiul 2 — `prima_litera`
 
-Scrie o functie `prima_litera(s: &String) -> char` care returneaza primul caracter, fara sa mute proprietatea.
+Scrie `prima_litera(s: &String) -> char` — returneaza primul caracter al numelui eroului, fara sa mute ownership.
 
 ```rust
 fn prima_litera(s: &String) -> char {
@@ -244,21 +233,19 @@ fn prima_litera(s: &String) -> char {
 }
 ```
 
-**Concepte**: `&String` — imprumut imutabil, proprietarul nu se schimba. `.chars().next()` returneaza primul caracter ca `Option<char>`, `.unwrap()` extrage valoarea.
+**Concepte**: `&String` — imprumut imutabil. `.chars().next()` returneaza `Option<char>`, `.unwrap()` extrage valoarea.
 
 ---
 
 ### Exercitiul 3 — `adauga_exclamare`
 
-Scrie o functie `adauga_exclamare(s: &mut String)` care adauga `"!"` la sfarsit.
+Scrie `adauga_exclamare(s: &mut String)` — adauga `"!"` la sfarsitul numelui eroului.
 
 ```rust
 fn adauga_exclamare(s: &mut String) {
     s.push_str("!");
 }
 ```
-
-**Concepte**: `&mut String` — imprumut mutabil. Variabila din `main` trebuie declarata cu `mut`.
 
 ---
 
@@ -267,7 +254,6 @@ fn adauga_exclamare(s: &mut String) {
 Codul urmator nu compileaza. Gaseste erorile si repara-l.
 
 ```rust
-// Cod eronat:
 fn main() {
     let mut s = String::from("hello");
     let r1 = &mut s;
@@ -276,19 +262,15 @@ fn main() {
 }
 ```
 
-**Erori**:
-- Nu poti avea **doua `&mut`** active simultan
-- Nu poti avea **`&mut` si `&`** active simultan
-
-**Solutie**: Folosesti o singura referinta mutabila si o eliberezi inainte de a crea alta.
+**Solutie**: Termini un borrow inainte de a-l incepe pe altul.
 
 ```rust
 fn main() {
     let mut s = String::from("hello");
     let r1 = &mut s;
     r1.push_str(", hello");
-    // r1 nu mai e folosit dupa aceasta linie — borrow-ul se elibereaza
-    println!("{}", s);
+    // r1 nu mai e activ dupa aceasta linie
+    println!("{}", s); // OK
 }
 ```
 
@@ -296,22 +278,20 @@ fn main() {
 
 ### Exercitiul 5 — `dublura`
 
-Scrie o functie `dublura(s: &mut String)` care dubleaza continutul: `"Rust"` → `"RustRust"`.
+Scrie `dublura(s: &mut String)` — dubleaza continutul: `"Rust"` → `"RustRust"`.
 
 ```rust
 fn dublura(s: &mut String) {
     let original = s.clone(); // salvezi copia INAINTE sa modifici
-    s.push_str(&original);    // adaugi copia la sfarsitul originalului
+    s.push_str(&original);
 }
 ```
-
-**Greseala comuna**: `s.clone().push_str(s)` — clone-ul e temporar si se arunca imediat, `s` ramane nemodificat.
 
 ---
 
 ### Exercitiul 6 — `prima_si_ultima`
 
-Scrie o functie `prima_si_ultima(s: &String) -> (char, char)` care returneaza primul si ultimul caracter.
+Scrie `prima_si_ultima(s: &String) -> (char, char)` — returneaza primul si ultimul caracter din numele eroului.
 
 ```rust
 fn prima_si_ultima(s: &String) -> (char, char) {
@@ -327,8 +307,6 @@ fn prima_si_ultima(s: &String) -> (char, char) {
 
 ### Exercitiul 7 — Dangling reference (referinta suspendata)
 
-Codul urmator nu compileaza. Explica de ce si repara-l.
-
 ```rust
 // Cod eronat:
 fn main() {
@@ -336,19 +314,17 @@ fn main() {
     {
         let s = String::from("hello");
         referinta = &s;
-    } // s iese din scope si e sters (drop)
-    println!("{}", referinta); // EROARE: referinta pointeaza la memorie eliberata
+    } // s sters — referinta pointeaza la memorie invalida
+    println!("{}", referinta); // EROARE
 }
 ```
-
-**Eroare**: `s` e sters cand `{}` se inchide. `referinta` ar pointa la memorie invalida — Rust nu permite asta (dangling reference).
 
 **Solutie**: `s` trebuie sa traiasca cel putin cat `referinta`.
 
 ```rust
 fn main() {
     let referinta;
-    let s = String::from("hello"); // s in acelasi scope cu referinta
+    let s = String::from("hello"); // s in acelasi scope
     referinta = &s;
     println!("{}", referinta); // OK
 }
@@ -358,7 +334,7 @@ fn main() {
 
 ### Exercitiul 8 — `inverseaza`
 
-Scrie o functie `inverseaza(s: &mut String)` care inverseaza sirul in loc: `"Rust"` → `"tsuR"`.
+Scrie `inverseaza(s: &mut String)` — inverseaza numele eroului: `"Rust"` → `"tsuR"`.
 
 ```rust
 fn inverseaza(s: &mut String) {
@@ -366,32 +342,19 @@ fn inverseaza(s: &mut String) {
 }
 ```
 
-**Concepte**:
-- `*s = ...` — dereferentiere: scrii la adresa la care pointeaza `s`
-- `.chars().rev()` — iteratorul caracterelor, inversat
-- `.collect::<String>()` — aduna caracterele inapoi intr-un `String`
-
 ---
 
-### Exercitiul 9 — `proceseaza` (ownership complet)
+### Exercitiul 9 — `proceseaza`
 
-Scrie o functie `proceseaza(s: String) -> String` care preia proprietatea, adauga `" [procesat]"` si returneaza proprietatea.
+Scrie `proceseaza(s: String) -> String` — preia ownership-ul unui item, adauga `" [procesat]"`, returneaza ownership-ul inapoi.
 
 ```rust
 fn proceseaza(s: String) -> String {
-    let mut de_procesat = s;            // preia ownership
+    let mut de_procesat = s;
     de_procesat.push_str(" [procesat]");
-    de_procesat                         // returneaza ownership
+    de_procesat
 }
 ```
-
-**Raspuns la intrebarea din exercitiu**: Dupa `let rezultat = proceseaza(s)`, variabila `s` **nu mai poate fi folosita** — ownership-ul a fost mutat in functie si returnat in `rezultat`.
-
-**Exemplu**: `"date"` → `"date [procesat]"`
-
----
-
-*Nota: Fisier generat in sesiunea din 2026-02-23. Exercitii completate in sesiunea din 2026-02-24.*
 
 ---
 
@@ -404,51 +367,48 @@ Rulare: `cargo run --bin ex_01b_ownership_extra`
 
 ### Serie 1 — Dificultate mica
 
-**S1-A.** Codul urmator nu compileaza. Explica de ce si repara-l fara sa schimbi functia `afiseaza`.
+**S1-A.** NPC-ul `afiseaza` primeste item-ul prin move si il distruge. Repara codul din main **fara sa schimbi functia `afiseaza`**, astfel incat sa poti folosi item-ul si dupa apel.
 
 ```rust
 fn main() {
-    let s = String::from("buna ziua");
-    afiseaza(s);
-    println!("Original: {}", s); // de ce da eroare?
+    let item = String::from("Potion of Healing");
+    afiseaza(item);
+    println!("Am inca: {}", item); // de ce da eroare?
 }
 
-fn afiseaza(text: String) {
-    println!("{}", text);
-}
+fn afiseaza(text: String) { println!("{}", text); }
 ```
 
-**S1-B.** Scrie o functie `este_goala(s: &String) -> bool` care returneaza `true` daca string-ul nu are niciun caracter.
-- `"hello"` → `false`
+**S1-B.** Scrie `inventar_gol(s: &String) -> bool` — returneaza `true` daca inventarul (string-ul) e gol.
+- `"Sabie"` → `false`
 - `""` → `true`
 - Indiciu: `.is_empty()` sau `.len() == 0`
 
-**S1-C.** Scrie o functie `lungime(s: &String) -> usize` care returneaza numarul de caractere (nu bytes).
+**S1-C.** Scrie `lungime_nume(s: &String) -> usize` — returneaza numarul de **caractere** (nu bytes) din numele personajului.
 - `"Rust"` → `4`
-- Indiciu: `.chars().count()` numara caractere, `.len()` numara bytes — difera pentru caractere speciale.
+- Indiciu: `.chars().count()` numara caractere Unicode, `.len()` numara bytes.
 
 ---
 
 ### Serie 2 — Dificultate medie
 
-**S2-A.** Scrie o functie `fa_majuscule(s: &mut String)` care transforma tot textul in majuscule, in loc.
-- `"rust"` → `"RUST"`
+**S2-A.** Scrie `fa_majuscule(s: &mut String)` — transforma numele personajului in majuscule, in loc.
+- `"arthur"` → `"ARTHUR"`
 - Indiciu: `.to_uppercase()` returneaza un String nou — cum il atribui inapoi?
 
-**S2-B.** Scrie o functie `concateneaza(s1: &String, s2: &String) -> String` care returneaza un String nou format din `s1 + " " + s2`, fara sa mute proprietatea niciunuia.
-- `"buna"`, `"ziua"` → `"buna ziua"`
+**S2-B.** Scrie `combina_titlu(s1: &String, s2: &String) -> String` — returneaza `"<s1> <s2>"` fara sa mute niciun owner.
+- `"Lord"`, `"Arthur"` → `"Lord Arthur"`
 - Indiciu: `format!("{} {}", s1, s2)`
 
-**S2-C.** Codul urmator nu compileaza. Explica de ce si propune doua variante de rezolvare diferite.
+**S2-C.** Functia de mai jos nu compileaza. Explica de ce si repara-o in doua moduri diferite.
 
 ```rust
-fn creeaza_string() -> &String {
-    let s = String::from("hello");
+fn creeaza_item() -> &String {
+    let s = String::from("Sabie Ruginita");
     &s
 }
-
-fn main() {
-    let r = creeaza_string();
-    println!("{}", r);
-}
 ```
+
+---
+
+*Nota: Fisier generat in sesiunea din 2026-02-23. Refacut cu tema jocuri video in 2026-02-28.*

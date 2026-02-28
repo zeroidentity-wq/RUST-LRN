@@ -3,36 +3,36 @@
 
 fn main() {
     // --- 1. Apel de baza ---
-    salut();
+    anunta_meci();
 
     // --- 2. Functie cu parametru ---
-    println!("{}", patrat(4)); // 16
+    println!("{}", patrat_damage(4)); // 16
 
     // --- 3. Return implicit vs explicit ---
     println!("{}", dublu_implicit(5));  // 10
     println!("{}", dublu_explicit(5));  // 10
 
     // --- 4. Expresie vs instructiune ---
-    println!("{}", demonstreaza_expresie(3)); // 6, nu 7
+    println!("{}", demo_loot_pierdut(3)); // 6, nu 7 — loot-ul de 7 e aruncat
 
     // --- 5. if/else ca expresie ---
-    println!("{}", max_doua(8, 3));  // 8
-    println!("{}", max_doua(2, 9));  // 9
+    println!("{}", cel_mai_puternic(8, 3));  // 8
+    println!("{}", cel_mai_puternic(2, 9));  // 9
 
     // --- 6. Return timpuriu ---
-    println!("{}", descrie_numar(0));    // "zero"
-    println!("{}", descrie_numar(5));    // "pozitiv"
-    println!("{}", descrie_numar(-3));   // "negativ"
+    println!("{}", stare_erou(0));    // "mort"
+    println!("{}", stare_erou(15));   // "critic"
+    println!("{}", stare_erou(80));   // "in viata"
 
     // --- 7. Functii si ownership ---
-    let s = String::from("Rust");
-    afiseaza_imprumut(&s);   // s ramine valid
-    println!("{}", s);        // OK
+    let sabie = String::from("Excalibur");
+    inspecteaza(&sabie);         // imprumut — sabia ramane la noi
+    println!("{}", sabie);       // OK
 
-    let s2 = String::from("hello");
-    let s2_nou = adauga_sufix(s2);   // s2 mutat in functie
-    println!("{}", s2_nou);           // "hello!"
-    // println!("{}", s2);            // EROARE — s2 a fost mutat
+    let sabie2 = String::from("Durandal");
+    let sabie2_upgraded = upgradeaza(sabie2);  // sabie2 mutata in functie
+    println!("{}", sabie2_upgraded);            // "Durandal!"
+    // println!("{}", sabie2);                  // EROARE — sabie2 a fost mutata
 }
 
 // ---------------------------------------------------------------------------
@@ -41,8 +41,8 @@ fn main() {
 // Cand o functie nu returneaza nimic, tipul return este `()` (unit).
 // In practica, il omitem complet din semnatura.
 
-fn salut() {
-    println!("Salut din functie!");
+fn anunta_meci() {
+    println!("Meciul incepe! Pregatiti-va eroi!");
 }
 
 // ---------------------------------------------------------------------------
@@ -51,13 +51,13 @@ fn salut() {
 // Fiecare parametru TREBUIE sa aiba tipul declarat explicit.
 // Rust nu face inferenta de tip la semnatura functiei.
 
-fn patrat(n: i32) -> i32 {
-    n * n
+fn patrat_damage(n: i32) -> i32 {
+    n * n // damage la patrat (ex: critical hit)
 }
 
 // Parametri multipli — fiecare cu tipul sau
-fn suma(a: i32, b: i32) -> i32 {
-    a + b
+fn damage_net(atac: i32, armor: i32) -> i32 {
+    atac - armor
 }
 
 // ---------------------------------------------------------------------------
@@ -71,68 +71,68 @@ fn dublu_implicit(n: i32) -> i32 {
 }
 
 fn dublu_explicit(n: i32) -> i32 {
-    return n * 2; // return explicit — echivalent, dar mai putin idiomaic
+    return n * 2; // return explicit — echivalent, dar mai putin idiomatic
 }
 
 // ---------------------------------------------------------------------------
 // 4. Expresie vs Instructiune — IMPORTANT
 // ---------------------------------------------------------------------------
-// Expresie:    produce o valoare        →  n * 2
-// Instructiune: executa ceva, arunca   →  n * 2;  (cu ;)
+// Expresie:     produce o valoare (da loot)     →  net + 5
+// Instructiune: executa ceva, arunca rezultatul →  net + 5;  (cu ;)
 //
-// `;` transforma o expresie in instructiune — valoarea e pierduta.
+// `;` transforma o expresie in instructiune — loot-ul e pierdut.
 
-fn demonstreaza_expresie(x: i32) -> i32 {
+fn demo_loot_pierdut(x: i32) -> i32 {
     let y = x * 2;
-    y + 1;    // instructiune: calculeaza 7 (daca x=3), dar o ARUNCA
-    y         // expresie: returneaza 6
+    y + 1;   // instructiune: calculeaza 7 (daca x=3), dar ARUNCA loot-ul
+    y        // expresie: returneaza 6 — acesta e loot-ul real
 }
 
 // ---------------------------------------------------------------------------
 // 5. if/else ca expresie
 // ---------------------------------------------------------------------------
-// In Rust, if/else poate produce o valoare — e o expresie, nu doar o structura de control.
+// In Rust, if/else poate produce o valoare — e o expresie, nu doar control flow.
 // Conditia: ambele ramuri trebuie sa returneze ACELASI tip.
 
-fn max_doua(a: i32, b: i32) -> i32 {
-    if a > b { a } else { b }  // if/else ca expresie — returneaza direct
+fn cel_mai_puternic(a: i32, b: i32) -> i32 {
+    if a > b { a } else { b }  // returneaza direct atacantul mai puternic
 }
 
 // Acelasi lucru, mai explicit:
-fn _max_doua_explicit(a: i32, b: i32) -> i32 {
-    let rezultat = if a > b { a } else { b };
-    rezultat
+fn _cel_mai_puternic_explicit(a: i32, b: i32) -> i32 {
+    let castigator = if a > b { a } else { b };
+    castigator
 }
 
 // ---------------------------------------------------------------------------
 // 6. Return timpuriu cu `return`
 // ---------------------------------------------------------------------------
-// Uneori vrei sa iesi din functie inainte de final.
-// `return` explicit este util in aceste cazuri.
+// Iesi din functie imediat daca o conditie e indeplinita.
+// Util cand nu are sens sa continui (ex: eroul e deja mort).
 
-fn descrie_numar(n: i32) -> &'static str {
-    if n == 0 {
-        return "zero";   // iesim imediat
+fn stare_erou(hp: i32) -> &'static str {
+    if hp <= 0 {
+        return "mort";    // iesim imediat — eroul e eliminat
     }
-    if n > 0 {
-        return "pozitiv";
+    if hp < 20 {
+        return "critic";  // HP critic — retrage-te!
     }
-    "negativ"   // return implicit pentru cazul ramas
+    "in viata"   // return implicit pentru cazul normal
 }
 
 // ---------------------------------------------------------------------------
 // 7. Functii si ownership — recapitulare
 // ---------------------------------------------------------------------------
-// Tipul parametrului determina ce se intampla cu ownership-ul.
+// Tipul parametrului determina ce se intampla cu ownership-ul item-ului.
 
-// &String  → imprumut imutabil, ownership ramine la apelant
-fn afiseaza_imprumut(s: &String) {
-    println!("Valoare: {}", s);
+// &String  → imprumut imutabil, sabia ramane la proprietar
+fn inspecteaza(item: &String) {
+    println!("Inspectezi: {}", item);
 }
 
 // String (fara &) → ownership mutat in functie
 //                   returnarea e singura cale de a-l primi inapoi
-fn adauga_sufix(mut s: String) -> String {
-    s.push_str("!");
-    s   // returnam ownership inapoi
+fn upgradeaza(mut item: String) -> String {
+    item.push_str("!"); // item upgradat
+    item                // returnam ownership inapoi
 }
