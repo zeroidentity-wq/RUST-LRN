@@ -192,6 +192,7 @@ Borrowing mutabil (&mut):
 | 3 | Poti imprumuta cu `&` (imutabil) sau `&mut` (mutabil) |
 | 4 | Nu poti avea `&mut` si `&` active **in acelasi timp** |
 | 5 | Nu poti avea mai mult de **un `&mut`** activ simultan |
+| 6 | Nu poti returna o referinta la ceva creat **in interiorul** functiei — ori returnezi valoarea (owned), ori dai o referinta la ceva din **afara** functiei |
 
 ---
 

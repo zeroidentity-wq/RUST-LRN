@@ -103,9 +103,9 @@ fn clasa_numar(n: i32) -> &'static str {
     }
 }
 
-// 7. Returneaza lungimea numelui eroului FARA a prelua ownership-ul.
+// 7. Returnează lungimea numelui eroului FARA a prelua ownership-ul.
 //    Exemplu: lungime_imprumut(&String::from("Rust")) -> 4
-//    Conditie: primeste imprumut imutabil, proprietarul ramane valid dupa apel.
+//    Condiție: primește imprumut imutabil, proprietarul ramane valid dupa apel.
 fn lungime_imprumut(s: &String) -> usize {
     let lungime: usize = s.len();
     lungime

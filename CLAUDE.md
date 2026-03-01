@@ -94,8 +94,8 @@ Conventia de denumire:
 
 ## Starea curenta a sesiunii
 
-**Subiect curent**: Functii, parametri si return values.
-**Subiect anterior finalizat**: Ownership si borrowing (sesiunea 2026-02-24).
-**Nota**: Din cand in cand se introduc quizuri scurte din capitolul anterior (ownership & borrowing).
+**Subiect curent**: Struct-uri si implementari (`struct`, `impl`).
+**Subiecte finalizate**: Ownership & borrowing (2026-02-24), Functii si return values (2026-02-28).
+**Nota**: Din cand in cand se introduc quizuri scurte din capitolele anterioare.
 
 **Nota**: Actualizeaza sectiunea "Starea curenta" la sfarsitul fiecarei sesiuni pentru a tine evidenta progresului.

@@ -1,6 +1,6 @@
 // ============================================================
 // Ownership & Borrowing — cod demonstrativ
-// Citeste notitele in: notes/01_ownership_borrowing.md
+// Citește notițele in: notes/01_ownership_borrowing.md
 // Rulare: cargo run --bin 01_ownership_borrowing
 // ============================================================
 
@@ -12,7 +12,7 @@ fn main() {
 }
 
 // --- MOVE ---
-// Cand dai item-ul unui alt jucator, tu nu il mai ai
+// Când dai item-ul unui alt jucator, tu nu il mai ai
 fn demo_move() {
     println!("=== MOVE ===");
 
@@ -23,12 +23,12 @@ fn demo_move() {
 }
 
 // --- COPY ---
-// Gold-ul si consumabilele se copiaza automat (tipuri simple: i32, bool, etc.)
+// Gold-ul si consumabilele se copiază automat (tipuri simple: i32, bool, etc.)
 fn demo_copy() {
     println!("\n=== COPY (gold) ===");
 
     let gold = 500;
-    let taxa = gold; // copie automata — gold ramane valid
+    let taxa = gold; // copie automata — gold rămâne valid
     println!("gold: {}, taxa: {}", gold, taxa); // ambele valide
 }
 
