@@ -1633,6 +1633,148 @@ println!("Salutare \
 let json = r#"{"cheie": "valoare", "nr": 42}"#;
 ```
 
+### `.collect::<String>()` — asamblarea iteratorilor în text
+
+Metoda `.collect()` ia o colecție de elemente (de obicei caractere sau șiruri) și le asamblează într-un singur obiect.
+
+**Analogie:** Imaginează-ți că ai piesele unui echipament dezmembrat (fiecare piesă = un caracter). `.collect()` este mecanicul care le asamblează înapoi într-un obiect întreg.
+
+```rust
+// Transformăm în iterator, filtrăm, și colectăm înapoi în String
+let nume = "Robert";
+let fara_vocale: String = nume.chars()
+    .filter(|c| !"aeiouAEIOU".contains(*c))
+    .collect();
+
+println!("{}", fara_vocale); // "Rbrt"
+```
+
+#### De ce avem nevoie de `::<String>`? — Turbofish
+
+`.collect()` este extrem de versatilă: poate produce un `Vec`, un `HashMap`, un `String` etc. Deoarece Rust nu știe ce vrei la final, trebuie să îi specifici tipul. Sintaxa `::<>` se numește **turbofish**:
+
+```rust
+// Varianta turbofish:
+let inversat = "Salut".chars().rev().collect::<String>();
+
+// Varianta cu tip explicit pe variabilă (echivalent):
+let inversat: String = "Salut".chars().rev().collect();
+```
+
+> **Sfat:** Dacă ai deja tipul specificat pe variabilă, nu mai e nevoie de turbofish.
+
+#### Exemple comune
+
+| Sursă | Cod | Rezultat |
+|---|---|---|
+| Vector de caractere | `vec!['a', 'b', 'c'].into_iter().collect::<String>()` | `"abc"` |
+| Inversare text | `"Salut".chars().rev().collect::<String>()` | `"tulaS"` |
+| Vector de `&str` | `vec!["Asta", "e", "text"].into_iter().collect::<String>()` | `"Astaetext"` |
+
+#### `.collect()` vs `.join()`
+
+- **`.join("")`** — mai rapid și clar când vrei să lipești un `Vec<&str>` fără transformări
+- **`.collect()`** — indispensabil când faci transformări la nivel de caracter (`.map()`, `.filter()`)
+
+```rust
+// join — simplu, fara transformari
+let cuvinte = vec!["Salut", "lume"];
+let text = cuvinte.join(" "); // "Salut lume"
+
+// collect — cu transformare
+let doar_mari: String = "salut lume".chars()
+    .map(|c| c.to_uppercase().next().unwrap())
+    .collect();
+// "SALUT LUME"
+```
+
+### `.collect()` pentru `HashMap` — combinarea a două liste cu `.zip()`
+
+`.zip()` funcționează ca un fermoar: ia elementele din două iteratoare și le împerechează unu la unu, producând tupluri `(cheie, valoare)`. `.collect()` vede aceste tupluri și construiește un `HashMap`.
+
+```rust
+use std::collections::HashMap;
+
+fn main() {
+    let fructe = vec!["Mere", "Pere", "Banane"];
+    let cantitati = vec![10, 5, 12];
+
+    let inventar: HashMap<_, _> = fructe.into_iter()
+        .zip(cantitati.into_iter())
+        .collect();
+
+    println!("{:#?}", inventar);
+    // Ordinea poate varia — HashMap nu pastreaza ordinea inserarii
+}
+```
+
+**Pas cu pas:**
+1. `into_iter()` transformă fiecare vector în iterator
+2. `.zip()` împerechează: `("Mere", 10)`, `("Pere", 5)`, `("Banane", 12)`
+3. `.collect()` vede tuplurile și, datorită `HashMap<_, _>`, le asamblează ca hartă
+
+> **`HashMap<_, _>`** — underscore-urile îi spun compilatorului "știu că vreau un HashMap, deduce tu tipurile". Rust deduce singur `HashMap<&str, i32>`.
+
+#### Dacă ai deja datele ca perechi
+
+```rust
+use std::collections::HashMap;
+
+fn main() {
+    let setari = vec![
+        ("tema", "intunecata"),
+        ("limba", "ro"),
+        ("notificari", "pornite"),
+    ];
+
+    let setari: HashMap<&str, &str> = setari.into_iter().collect();
+
+    println!("Tema: {}", setari.get("tema").unwrap());
+}
+```
+
+Fără `.zip()` — datele sunt deja perechi, `.collect()` le preia direct.
+
+### `.collect()` pentru gestionarea erorilor într-o listă
+
+`.collect()` poate "extrage" erorile dintr-o listă de `Result<T, E>`: evaluează toate elementele și returnează fie `Ok(Vec<T>)` cu toate valorile, fie **prima eroare** `Err(E)` întâlnită.
+
+```rust
+fn main() {
+    let numere_text = vec!["1", "2", "trei", "4"];
+
+    let rezultat: Result<Vec<i32>, _> = numere_text.iter()
+        .map(|s| s.parse::<i32>())
+        .collect();
+
+    match rezultat {
+        Ok(nums) => println!("Toate parsate: {:?}", nums),
+        Err(e)   => println!("Eroare la parsare: {}", e),
+    }
+    // "Eroare la parsare: invalid digit found in string"
+}
+```
+
+**De ce funcționează?** `Result` implementează `FromIterator` — `.collect()` știe că dacă tipul țintă e `Result<Vec<T>, E>`, trebuie să oprească la prima eroare.
+
+Dacă toate textele sunt valide:
+```rust
+let valide = vec!["1", "2", "3"];
+let rezultat: Result<Vec<i32>, _> = valide.iter()
+    .map(|s| s.parse::<i32>())
+    .collect();
+// Ok([1, 2, 3])
+```
+
+#### Rezumat: ce poate produce `.collect()`
+
+| Tip țintă | Sursa iteratorului | Comportament |
+|---|---|---|
+| `String` | `char` / `&str` | Asamblează text |
+| `Vec<T>` | orice `T` | Colectează într-un vector |
+| `HashMap<K, V>` | tupluri `(K, V)` | Construiește hartă |
+| `Result<Vec<T>, E>` | `Result<T, E>` | Ok dacă toate reușesc, Err la prima eroare |
+
 ---
 
 <h2 id="cap12">12. OOP în Rust</h2>

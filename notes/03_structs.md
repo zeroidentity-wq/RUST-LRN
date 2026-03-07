@@ -243,14 +243,16 @@ Exercitiu cumulativ — combina **Struct + impl** (cap 3) cu **Functii** (cap 2)
 
 ---
 
-### Solutii (1-6 rezolvate)
+### Solutii complete
 
 ```rust
+use rand::Rng;
+
 struct Erou {
     nume: String,
     clasa: String,
     hp: i32,
-    nivel: i32,
+    nivel: i32,       // ales i32 in loc de u32 pentru compatibilitate cu calcule de damage
     inventar: Vec<String>,
 }
 
@@ -265,39 +267,77 @@ impl Erou {
         }
     }
 
+    // Extra: info() afiseaza si putere_totala, apeland functia libera
     fn info(&self) {
-        println!("[{} | {}] HP: {} | Nivel: {} | Inventar: {:?}",
-            self.nume, self.clasa, self.hp, self.nivel, self.inventar);
+        println!("[{} | {}] HP: {} | Nivel: {} | Inventar: {:?}, putere_totala: {}",
+            self.nume, self.clasa, self.hp, self.nivel, self.inventar, putere_totala(self));
     }
 
     fn pick_up(&mut self, item: String) {
         self.inventar.push(item);
+        // item va fi owner al valorii in cadrul functiei pana va fi facut push in vector
+        // din acest moment vectorul detine item-ul in inventar
     }
 
     fn take_damage(&mut self, damage: i32) {
         self.hp -= damage;
         if self.hp <= 0 {
-            println!("{} a cazut in lupta!", self.nume);
+            println!("Erou {} a cazut in lupta!", self.nume);
         }
     }
 
     fn is_alive(&self) -> bool {
         if self.hp > 0 { true } else { false }
+        // Nota: se poate simplifica la: self.hp > 0
     }
 
     fn use_potion(&mut self) {
         let index = self.inventar.iter().position(|item| item.contains("Potion"));
         match index {
-            Some(i) => { self.inventar.remove(i); self.hp += 30; }
-            None    => println!("Nu ai nicio potiune in inventar!"),
+            Some(potiune) => {
+                self.inventar.remove(potiune);
+                self.hp += 30;
+            }
+            None => println!("Nu ai nici o potiune in inventar!"),
         }
     }
 }
 
-// 7. putere_totala — TODO
-// 8. ataca         — TODO
+fn putere_totala(erou: &Erou) -> i32 {
+    erou.nivel * 10 + erou.inventar.len() as i32 * 5
+    // &Erou si nu Erou — nu preluam ownership, doar citim
+}
+
+// Extra: damage random in loc de nivel * 5 fix
+fn ataca(atacator: &Erou, tinta: &mut Erou) {
+    let damage = rand::thread_rng().gen_range(1..=20) * atacator.nivel;
+    println!("{} ataca {} => {} damage.", atacator.nume, tinta.nume, damage);
+    tinta.take_damage(damage);
+    // atacator: &Erou    — doar citim nivelul
+    // tinta: &mut Erou   — modificam hp-ul
+}
+
+fn main() {
+    let mut erou_1 = Erou::new("Arthemus", "Demi-Wolf");
+    erou_1.info();
+    let mut erou_2 = Erou::new("Davous", "Archer");
+    erou_2.info();
+
+    erou_1.pick_up(String::from("Potion"));
+    erou_2.pick_up(String::from("Potion"));
+
+    ataca(&erou_1, &mut erou_2);
+
+    if erou_2.is_alive() {
+        println!("Erou {} is alive!", erou_2.nume);
+    }
+
+    erou_2.info();
+    erou_2.use_potion();
+    erou_2.info();
+}
 ```
 
 ---
 
-*Nota: Fisier generat in sesiunea din 2026-02-28. Exercitii rescrise cumulativ in sesiunea din 2026-03-01.*
+*Nota: Fisier generat in sesiunea din 2026-02-28. Exercitii rescrise cumulativ in sesiunea din 2026-03-01. Solutii complete adaugate in sesiunea din 2026-03-07.*

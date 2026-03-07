@@ -15,6 +15,8 @@
 //   - inventar: Vec<String>  (lista de iteme detinute)
 //
 
+use rand::Rng;
+
 struct  Erou {
     nume: String,
     clasa: String,
@@ -41,7 +43,7 @@ impl Erou {
     //    Exemplu output:
     //    [Arthur | Warrior] HP: 100 | Nivel: 1 | Inventar: ["Excalibur", "Potion"]
     fn info(&self) {
-        println!("[{} | {}] HP: {} | Nivel: {} | Inventar: {:?}", self.nume, self.clasa, self.hp, self.nivel, self.inventar);
+        println!("[{} | {}] HP: {} | Nivel: {} | Inventar: {:?}, putere_totala: {}", self.nume, self.clasa, self.hp, self.nivel, self.inventar, putere_totala(self));
     }
     // 3. pick_up(&mut self, item: String)
     //    Eroul preia ownership-ul unui item si il adauga in inventar.
@@ -90,8 +92,6 @@ impl Erou {
 
     }
 
-
-
 }
 
 
@@ -103,13 +103,27 @@ impl Erou {
 //    Calculeaza puterea eroului: nivel * 10 + nr_iteme * 5.
 //    Primeste imprumut imutabil — nu preia ownership.
 //    Gandeste-te: de ce folosim `&Erou` si nu `Erou`?
-//
+
+fn putere_totala(erou: &Erou) -> i32 {
+    erou.nivel * 10 + erou.inventar.len() as i32 * 5
+}
+
 // 8. ataca(atacator: &Erou, tinta: &mut Erou)
 //    Atacatorul loveste tinta cu damage = nivel_atacator * 5.
 //    Afiseaza: "<atacator> ataca <tinta> pentru <dmg> damage!".
 //    Apeleaza take_damage pe tinta.
 //    Gandeste-te: de ce atacatorul e `&Erou` dar tinta e `&mut Erou`?
-//
+//    Pentru ca tintei va fi nevoie sa-i modificam campul de hp current in cazul in care damage este >= 0
+
+fn ataca(atacator: &Erou, tinta: &mut Erou) {
+    let damage = rand::thread_rng().gen_range(1..=20) * atacator.nivel; // intre 1 si 20 inclusiv
+    println!("{} ataca {} => {} damage.",atacator.nume, tinta.nume, damage);
+    tinta.take_damage(damage);
+
+}
+
+
+
 // ============================================================
 // MAIN — testeaza tot ce ai scris
 // ============================================================
@@ -117,5 +131,18 @@ impl Erou {
 // foloseste o potiune si afiseaza starea finala.
 
 fn main() {
+    let mut erou_1 = Erou::new("Arthemus", "Demi-Wolf");
+    erou_1.info();
+    let mut erou_2 = Erou::new("Davous", "Archer");
+    erou_2.info();
+    erou_1.pick_up(String::from("Potion"));
+    erou_2.pick_up(String::from("Potion"));
+    ataca(&erou_1, &mut erou_2);
+    if erou_2.is_alive() {
+        println!("Erou {} is alive!", erou_2.nume);
+    }
+    erou_2.info();
+    erou_2.use_potion();
+    erou_2.info();
 
 }
