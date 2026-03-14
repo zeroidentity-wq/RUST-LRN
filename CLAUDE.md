@@ -29,9 +29,9 @@
 
 #### Faza 1 — Fundamentele Rust (in curs)
 - [x] Ownership si borrowing (conceptul de baza al Rust)
-- [ ] Functii, parametri, return values
-- [ ] Structuri (`struct`) si implementari (`impl`)
-- [ ] Enumeratii (`enum`) si pattern matching
+- [x] Functii, parametri, return values
+- [x] Structuri (`struct`) si implementari (`impl`)
+- [x] Enumeratii (`enum`) si pattern matching
 - [ ] Tratarea erorilor (`Result`, `Option`)
 - [ ] Colectii: `Vec`, `HashMap`
 - [ ] Tratarea fisierelor si I/O de baza
@@ -94,8 +94,8 @@ Conventia de denumire:
 
 ## Starea curenta a sesiunii
 
-**Subiect curent**: Struct-uri si implementari (`struct`, `impl`).
-**Subiecte finalizate**: Ownership & borrowing (2026-02-24), Functii si return values (2026-02-28).
+**Subiect curent**: Tratarea erorilor (`Result`, `Option`) — exercitii de scris.
+**Subiecte finalizate**: Ownership & borrowing (2026-02-24), Functii si return values (2026-02-28), Struct-uri si impl (2026-03-08), Enumeratii si pattern matching (2026-03-14).
 **Nota**: Din cand in cand se introduc quizuri scurte din capitolele anterioare.
 
 **Nota**: Actualizeaza sectiunea "Starea curenta" la sfarsitul fiecarei sesiuni pentru a tine evidenta progresului.
