@@ -34,6 +34,10 @@ impl Erou {
     fn afiseaza_inventar(&self) {
         println!("afiseaza inventar erou: {} = {:?}", self.nume,self.inventar);
     }
+
+    fn afiseaza_hp(&self) {
+        println!("{} are {} HP!", self.nume, self.hp);
+    }
 }
 
 
@@ -107,6 +111,14 @@ fn aplica_dmg(erou: &mut Erou, dmg: i32) -> Result<i32, String> {
     Ok(erou.hp)
 }
 
+// 4. Scrie executa_quest — apeleaza aplica_dmg si propaga eroarea cu ?
+fn vindeca_erou(erou: &mut Erou) -> Result<i32, String> {
+    erou.hp += 10;
+    Ok(gaseste_potion(erou).ok_or("Nu exista nicio potion in inventar".to_string())?)
+
+}
+
+
 
 fn main() {
    match divide(5, 3) {
@@ -144,6 +156,24 @@ fn main() {
         Ok(hp_ramas) => { println!("Atack reusit! Erou: {} HP Ramas: {}",erou1.nume, hp_ramas); },
         Err(error) => { println!("Eraore: {}", error); },
     }
+    match aplica_dmg(&mut erou1, -5) {
+        Ok(hp_ramas) => { println!("Atack reusit! Erou: {} HP Ramas: {}",erou1.nume, hp_ramas); },
+        Err(error) => { println!("Eraore: {}", error); },
+    }
+
+    erou1.afiseaza_hp();
+    match vindeca_erou(&mut erou1) {
+        Ok(valoare) => { println!("Vindeca erou:{} {}", erou1.nume,valoare); },
+        Err(error) => { println!("{}", error); }
+    }
+    erou1.afiseaza_hp();
+
+
+    match aplica_dmg(&mut erou1, 105) {
+        Ok(hp_ramas) => { println!("Atack reusit! Erou: {} HP Ramas: {}",erou1.nume, hp_ramas); },
+        Err(error) => { println!("Eraore: {}", error); },
+    }
+
 
 
 }
