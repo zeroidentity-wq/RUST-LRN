@@ -1,14 +1,19 @@
 fn cripteaza(text: &str, n:u8) -> String {
     let mut criptat = String::new();
     for caracter in text.chars(){
-        let i_original = caracter as u8;
-        let mask = (i_original + n) as char;
-        criptat.push(mask);
+        let i_original = caracter as u8 - b'a';
+        let index_nou = (i_original  + n) % 26;
+        let litera = (b'a' + index_nou) as char;
+        criptat.push(litera);
     }
-    println!("{}", criptat);
+    println!("Criptat: {}", criptat);
     criptat
 }
 
+
+
+
 fn main() {
-    cripteaza("abc",3);
+    cripteaza("xyz", 3);
+
 }
