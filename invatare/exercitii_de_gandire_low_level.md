@@ -205,6 +205,50 @@ Scrie o funcție care primește un string și returnează frecvența fiecărei l
 - Această tehnică (mapping caracter → index) e baza a multor algoritmi. Unde
   altundeva ai putea-o folosi? (Hint: anagrame, criptografie simplă)
 
+✅ **Soluție exercițiul 1.3:**
+
+```rust
+fn calculeaza_string(s: String) {
+    let s_mic = s.to_lowercase();
+    let mut frecventa: [u32; 26] = [0; 26];
+
+    for caracter in s_mic.chars() {
+        if !caracter.is_ascii_lowercase() {
+            continue; // sări peste spații, cifre, caractere non-ASCII
+        }
+        let index = caracter as u32 - 'a' as u32;
+        frecventa[index as usize] += 1;
+    }
+
+    for i in 0..26 {
+        if frecventa[i] > 0 {
+            let litera = (b'a' + i as u8) as char;
+            println!("{}: {}", litera, frecventa[i]);
+        }
+    }
+}
+```
+
+🐛 **Bug comun**: indexarea cu `u32` în loc de `usize` → eroare de compilare.
+Array-urile în Rust se indexează **doar** cu `usize` — cast obligatoriu: `frecventa[index as usize]`.
+
+🐛 **Bug comun 2**: fără guard `is_ascii_lowercase()`, un spațiu sau caracter românesc
+cauzează **underflow** pe `u32` (`' ' as u32 - 'a' as u32` = `32 - 97` pe tip fără semn → panic).
+
+🔬 **Răspunsuri la întrebările de aprofundare:**
+
+**De ce e mai rapid decât HashMap?**
+Array-ul are elementele unul lângă altul în memorie — acces direct la index = O(1) fără
+overhead. HashMap calculează un hash, gestionează coliziuni, alocă pe heap. Pentru un
+alfabet fix (26 litere), array-ul e întotdeauna mai rapid.
+
+**Cum obții litera din index:**
+Operația inversă față de `caracter as u32 - 'a' as u32`:
+```rust
+let litera = (b'a' + i as u8) as char;
+// b'a' = 97u8, adaugi indexul, convertești la char
+```
+
 ---
 
 ## Exercițiul 1.4: Caesar Cipher — criptare prin deplasare
