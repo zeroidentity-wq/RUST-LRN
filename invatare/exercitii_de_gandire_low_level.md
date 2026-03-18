@@ -52,6 +52,70 @@ Scrie o funcție `inverseaza(s: &str) -> String` care inversează un string.
   (caractere)? Testează cu "café" — câți bytes are vs câte caractere?
 - Poți rezolva FĂRĂ Vec, folosind doar un String gol pe care adaugi caractere?
 
+✅ **Soluție exercițiul 1.1:**
+
+```rust
+// Varianta 1: cu Vec<char>
+fn inverseaza(s: &str) -> String {
+    let mut v_char: Vec<char> = Vec::new();
+    for c in s.chars() {
+        v_char.push(c);
+    }
+    let mut i = v_char.len() - 1;
+    let mut reverse: Vec<char> = Vec::new();
+    loop {
+        reverse.push(v_char[i]);
+        if i == 0 { break; }
+        i -= 1;
+    }
+    let mut result = String::new();
+    for c in reverse {
+        result.push(c);
+    }
+    result
+}
+
+// Varianta 2: fără Vec, doar String
+// ATENȚIE: folosește s.chars().count() - 1, NU s.len() - 1
+// s.len() returnează bytes, nu caractere — pentru "AtaĂÎțî" ar da index greșit!
+fn inverseaza_string(s: &str) -> String {
+    let mut result = String::new();
+    let mut i = s.chars().count() - 1;
+    loop {
+        result.push(s.chars().nth(i).unwrap());
+        if i == 0 { break; }
+        i -= 1;
+    }
+    result
+}
+```
+
+🐛 **Bug comun**: `s.len() - 1` returnează lungimea în **bytes**, nu caractere.
+Pentru "AtaĂÎțî": `len()` = 11 bytes, dar `chars().count()` = 7 caractere.
+Folosind `len()` ca index în `.chars().nth()` → panic cu `.unwrap()` pe `None`.
+
+---
+
+🔬 **Răspunsuri la întrebările de aprofundare:**
+
+**`café` — bytes vs caractere:**
+- `.len()` = **5 bytes** (`c`=1, `a`=1, `f`=1, `é`=2 bytes în UTF-8)
+- `.chars().count()` = **4 caractere**
+
+Caracterele ASCII (a-z, 0-9) = 1 byte. Caracterele speciale (é, ă, ș, î) = 2 bytes.
+Rust stochează `String` intern ca bytes UTF-8, deci `.len()` numără bytes, nu caractere vizibile.
+
+**De ce varianta fără Vec e mai lentă?**
+
+`.chars().nth(i)` **nu sare direct** la poziția `i` — parcurge caracterele de la început de fiecare dată:
+- iterația 1: parcurge `n-1` pași
+- iterația 2: parcurge `n-2` pași
+- ...
+
+Total: `n + (n-1) + ... + 1` = **O(n²)**
+
+Varianta cu `Vec<char>` face `v_char[i]` — acces direct la memorie = **O(1)** per iterație = **O(n)** total.
+
 ---
 
 ## Exercițiul 1.2: Verifică dacă un string e palindrom
