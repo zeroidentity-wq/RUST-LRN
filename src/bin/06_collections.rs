@@ -16,8 +16,8 @@ use std::collections::HashMap;
 fn demo_vec_creare() {
     println!("--- Creare Vec ---");
 
-    let mut v: Vec<i32> = Vec::new();   // gol, tip explicit
-    let v2 = vec![10, 20, 30];          // macro vec! cu valori initiale
+    let mut v: Vec<i32> = Vec::new(); // gol, tip explicit
+    let v2 = vec![10, 20, 30]; // macro vec! cu valori initiale
 
     v.push(1);
     v.push(2);
@@ -44,12 +44,12 @@ fn demo_vec_acces() {
     // acces sigur cu get() — returneaza Option
     match v.get(1) {
         Some(nume) => println!("  v.get(1) = {}", nume),
-        None       => println!("  Index inexistent"),
+        None => println!("  Index inexistent"),
     }
 
     match v.get(99) {
         Some(nume) => println!("  v.get(99) = {}", nume),
-        None       => println!("  v.get(99) = None (index inexistent)"),
+        None => println!("  v.get(99) = None (index inexistent)"),
     }
 
     // v[99]  <-- ar face panic! nu incerca
@@ -74,10 +74,10 @@ fn demo_vec_modificare() {
     inventar.push("Cheie");
     println!("  push:     {:?}", inventar);
 
-    let scos = inventar.pop();   // returneaza Option<T>
+    let scos = inventar.pop(); // returneaza Option<T>
     println!("  pop:      {:?} | scos: {:?}", inventar, scos);
 
-    let item = inventar.remove(1);  // scoate "Armura"
+    let item = inventar.remove(1); // scoate "Armura"
     println!("  remove(1): {:?} | scos: {}", inventar, item);
 
     println!("  len: {}", inventar.len());
@@ -145,12 +145,12 @@ fn demo_hashmap_acces() {
     // get returneaza Option<&V>
     match hp.get("Arthas") {
         Some(viata) => println!("  Arthas are {} HP", viata),
-        None        => println!("  Arthas nu exista"),
+        None => println!("  Arthas nu exista"),
     }
 
     match hp.get("Dragon") {
         Some(viata) => println!("  Dragon are {} HP", viata),
-        None        => println!("  Dragon nu exista in mapa"),
+        None => println!("  Dragon nu exista in mapa"),
     }
 
     println!("  Goblin exista? {}", hp.contains_key("Goblin"));
@@ -176,7 +176,7 @@ fn demo_hashmap_modificare() {
 
     // entry: adauga DOAR daca nu exista
     scoruri.entry("Zara").or_insert(40);
-    scoruri.entry("Arthas").or_insert(0);  // nu face nimic — Arthas deja exista
+    scoruri.entry("Arthas").or_insert(0); // nu face nimic — Arthas deja exista
     println!("  Dupa entry: {:?}", scoruri);
 
     // remove

@@ -19,27 +19,29 @@ struct Erou {
 
 impl Erou {
     fn new(nume: &str) -> Erou {
-        Erou{
+        Erou {
             nume: String::from(nume),
-            hp:100,
-            mana:100,
-            inventar:Vec::new(),
+            hp: 100,
+            mana: 100,
+            inventar: Vec::new(),
         }
     }
 
-    fn add_item(&mut self, item:Item) {
+    fn add_item(&mut self, item: Item) {
         self.inventar.push(item);
     }
 
     fn afiseaza_inventar(&self) {
-        println!("afiseaza inventar erou: {} = {:?}", self.nume,self.inventar);
+        println!(
+            "afiseaza inventar erou: {} = {:?}",
+            self.nume, self.inventar
+        );
     }
 
     fn afiseaza_hp(&self) {
         println!("{} are {} HP!", self.nume, self.hp);
     }
 }
-
 
 // ============================================================
 // EXERCITIUL 1 — Result
@@ -54,14 +56,12 @@ impl Erou {
 // Foloseste `match` pentru ambele cazuri.
 // ============================================================
 
-
 fn divide(a: i32, b: i32) -> Result<i32, String> {
     if b == 0 {
         Err("Divide by zero".to_string())
     } else {
         Ok(a / b)
     }
-
 }
 
 // ============================================================
@@ -87,7 +87,6 @@ fn gaseste_potion(erou: &Erou) -> Option<i32> {
     }
     None
 }
-
 
 // ============================================================
 // EXERCITIUL 3 — Result cu struct
@@ -115,25 +114,29 @@ fn aplica_dmg(erou: &mut Erou, dmg: i32) -> Result<i32, String> {
 fn vindeca_erou(erou: &mut Erou) -> Result<i32, String> {
     erou.hp += 10;
     Ok(gaseste_potion(erou).ok_or("Nu exista nicio potion in inventar".to_string())?)
-
 }
 
-
-
 fn main() {
-   match divide(5, 3) {
-       Ok(rezulat) => { println!("Rezulat:{}", rezulat); },
-       Err(eroare) => { println!("{}", eroare); }
-   }
+    match divide(5, 3) {
+        Ok(rezulat) => {
+            println!("Rezulat:{}", rezulat);
+        }
+        Err(eroare) => {
+            println!("{}", eroare);
+        }
+    }
 
     match divide(10, 0) {
-        Ok(rezulat) => { println!("Rezulat: {}", rezulat); },
-        Err(eroare) => { println!("{}", eroare); }
+        Ok(rezulat) => {
+            println!("Rezulat: {}", rezulat);
+        }
+        Err(eroare) => {
+            println!("{}", eroare);
+        }
     }
 
     let mut erou1 = Erou::new("Behemudo");
     let mut erou2 = Erou::new("Barbos");
-
 
     erou1.add_item(Item::Potion(1));
     erou1.add_item(Item::Potion(2));
@@ -153,27 +156,39 @@ fn main() {
 
     // dmg valid, dmg negativ, dmg fatal
     match aplica_dmg(&mut erou1, 30) {
-        Ok(hp_ramas) => { println!("Atack reusit! Erou: {} HP Ramas: {}",erou1.nume, hp_ramas); },
-        Err(error) => { println!("Eraore: {}", error); },
+        Ok(hp_ramas) => {
+            println!("Atack reusit! Erou: {} HP Ramas: {}", erou1.nume, hp_ramas);
+        }
+        Err(error) => {
+            println!("Eraore: {}", error);
+        }
     }
     match aplica_dmg(&mut erou1, -5) {
-        Ok(hp_ramas) => { println!("Atack reusit! Erou: {} HP Ramas: {}",erou1.nume, hp_ramas); },
-        Err(error) => { println!("Eraore: {}", error); },
+        Ok(hp_ramas) => {
+            println!("Atack reusit! Erou: {} HP Ramas: {}", erou1.nume, hp_ramas);
+        }
+        Err(error) => {
+            println!("Eraore: {}", error);
+        }
     }
 
     erou1.afiseaza_hp();
     match vindeca_erou(&mut erou1) {
-        Ok(valoare) => { println!("Vindeca erou:{} {}", erou1.nume,valoare); },
-        Err(error) => { println!("{}", error); }
+        Ok(valoare) => {
+            println!("Vindeca erou:{} {}", erou1.nume, valoare);
+        }
+        Err(error) => {
+            println!("{}", error);
+        }
     }
     erou1.afiseaza_hp();
 
-
     match aplica_dmg(&mut erou1, 105) {
-        Ok(hp_ramas) => { println!("Atack reusit! Erou: {} HP Ramas: {}",erou1.nume, hp_ramas); },
-        Err(error) => { println!("Eraore: {}", error); },
+        Ok(hp_ramas) => {
+            println!("Atack reusit! Erou: {} HP Ramas: {}", erou1.nume, hp_ramas);
+        }
+        Err(error) => {
+            println!("Eraore: {}", error);
+        }
     }
-
-
-
 }

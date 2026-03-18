@@ -99,7 +99,7 @@ fn clasa_numar(n: i32) -> &'static str {
     } else if n >= 10 {
         return "mare";
     } else {
-        return "gresit"
+        return "gresit";
     }
 }
 
@@ -139,14 +139,22 @@ fn suma_pana_la(n: u32) -> u32 {
 //     Exemplu: abs_valoare(-7) -> 7, abs_valoare(3) -> 3
 //     Conditie: foloseste if/else ca expresie, fara `return` explicit.
 fn abs_valoare(n: i32) -> i32 {
-    if n < 0 { -n } else if n == 0 { 0 } else { n }
+    if n < 0 {
+        -n
+    } else if n == 0 {
+        0
+    } else {
+        n
+    }
 }
 
 // 11. Calculeaza combo multiplier-ul: n! (n factorial).
 //     Exemplu: factorial(5) -> 120  (5*4*3*2*1), factorial(0) -> 1
 //     Conditie: foloseste return timpuriu pentru cazul n == 0.
 fn factorial(n: u64) -> u64 {
-    if n == 0 { return 1; }
+    if n == 0 {
+        return 1;
+    }
     let mut factorial = 1;
     for i in 1..=n {
         factorial *= i;

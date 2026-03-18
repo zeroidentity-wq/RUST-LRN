@@ -12,8 +12,6 @@ use std::collections::HashMap;
 // Scoate ultimul cu pop si printeaza ce ai scos (e Option — foloseste match).
 // ============================================================
 
-
-
 // ============================================================
 // EXERCITIUL 2 — Vec: acces sigur
 // ============================================================
@@ -21,8 +19,6 @@ use std::collections::HashMap;
 // incearca sa accesezi un index care nu exista folosind .get().
 // Printeaza "Gasit: X" sau "Index inexistent" cu match.
 // ============================================================
-
-
 
 // ============================================================
 // EXERCITIUL 3 — HashMap: construieste un registru de HP
@@ -34,8 +30,6 @@ use std::collections::HashMap;
 // folosind match pe rezultatul lui .get().
 // ============================================================
 
-
-
 // ============================================================
 // EXERCITIUL 4 — HashMap: entry si modificare
 // ============================================================
@@ -45,8 +39,6 @@ use std::collections::HashMap;
 // - Sterge un jucator cu remove() si printeaza ce ai scos.
 // - Itereaza peste toti jucatorii ramasi si afiseaza "Nume: X, HP: Y".
 // ============================================================
-
-
 
 // ============================================================
 // EXERCITIUL 5 — Combinat: inventar + scor
@@ -59,8 +51,6 @@ use std::collections::HashMap;
 // cauta scorul in HashMap si afiseaza "Item: X, Scor: Y"
 // sau "Item: X, Scor: necunoscut" daca nu e in HashMap.
 // ============================================================
-
-
 
 fn main() {
     println!("=== Exercitii 06: Vec si HashMap ===\n");

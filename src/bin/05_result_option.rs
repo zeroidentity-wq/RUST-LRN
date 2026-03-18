@@ -53,10 +53,10 @@ fn cauta_sabie(inventar: &Vec<Item>) -> Option<i32> {
     for item in inventar {
         // if let = sintaxa scurta pentru match cu un singur caz (explicat in sectiunea 3)
         if let Item::Sabie(dmg) = item {
-            return Some(*dmg);   // am gasit — returnam valoarea invelita in Some
+            return Some(*dmg); // am gasit — returnam valoarea invelita in Some
         }
     }
-    None                         // nu am gasit nimic
+    None // nu am gasit nimic
 }
 
 fn cauta_potion(inventar: &Vec<Item>) -> Option<i32> {
@@ -75,7 +75,7 @@ fn cauta_potion(inventar: &Vec<Item>) -> Option<i32> {
 fn afiseaza_sabie(inventar: &Vec<Item>) {
     match cauta_sabie(inventar) {
         Some(dmg) => println!("  Ai o sabie cu {} damage.", dmg),
-        None      => println!("  Nu ai nicio sabie in inventar."),
+        None => println!("  Nu ai nicio sabie in inventar."),
     }
 }
 
@@ -104,7 +104,7 @@ fn verifica_potion(inventar: &Vec<Item>) {
 // ATENTIE: .unwrap() exista dar face panic daca e None — evita-l in productie!
 
 fn damage_sabie(inventar: &Vec<Item>) -> i32 {
-    cauta_sabie(inventar).unwrap_or(0)  // daca nu ai sabie, damage = 0
+    cauta_sabie(inventar).unwrap_or(0) // daca nu ai sabie, damage = 0
 }
 
 // ============================================================
@@ -142,7 +142,7 @@ fn ataca(atacator: &Erou, tinta: &Erou) -> Result<i32, String> {
 
 fn executa_atac(atacator: &Erou, tinta: &Erou) {
     match ataca(atacator, tinta) {
-        Ok(dmg)  => println!("  {} ataca si face {} damage!", atacator.nume, dmg),
+        Ok(dmg) => println!("  {} ataca si face {} damage!", atacator.nume, dmg),
         Err(msg) => println!("  Eroare: {}", msg),
     }
 }
@@ -157,7 +157,7 @@ fn executa_atac(atacator: &Erou, tinta: &Erou) {
 // Functioneaza doar in functii care returneaza Result (sau Option).
 
 fn quest_atac(atacator: &Erou, tinta: &Erou) -> Result<String, String> {
-    let dmg = ataca(atacator, tinta)?;  // daca e Err, iese automat din functie
+    let dmg = ataca(atacator, tinta)?; // daca e Err, iese automat din functie
 
     // Ajungem aici DOAR daca ataca() a returnat Ok
     let mesaj = format!(
@@ -196,8 +196,14 @@ fn main() {
 
     // unwrap_or
     println!("\nunwrap_or:");
-    println!("  Damage sabie (inventar complet): {}", damage_sabie(&erou.inventar));
-    println!("  Damage sabie (inventar gol):     {}", damage_sabie(&inventar_gol));
+    println!(
+        "  Damage sabie (inventar complet): {}",
+        damage_sabie(&erou.inventar)
+    );
+    println!(
+        "  Damage sabie (inventar gol):     {}",
+        damage_sabie(&inventar_gol)
+    );
 
     // ---------- Result ----------
     println!("\n--- Result ---");
@@ -224,11 +230,11 @@ fn main() {
 
     match quest_atac(&erou, &tinta) {
         Ok(mesaj) => println!("  {}", mesaj),
-        Err(e)    => println!("  Quest esuat: {}", e),
+        Err(e) => println!("  Quest esuat: {}", e),
     }
 
     match quest_atac(&erou_mort, &tinta) {
         Ok(mesaj) => println!("  {}", mesaj),
-        Err(e)    => println!("  Quest esuat: {}", e),
+        Err(e) => println!("  Quest esuat: {}", e),
     }
 }

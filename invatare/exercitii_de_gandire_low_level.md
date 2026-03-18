@@ -142,6 +142,44 @@ Bonus: ignoră spațiile și majusculele: "Ana are era na" → true (sorta... ve
 - Cum ai modifica funcția să ignore spațiile? Dar semnele de punctuație?
 - Ce complexitate are soluția ta? Câte comparații faci pentru un string de N caractere?
 
+✅ **Soluție exercițiul 1.2:**
+
+```rust
+fn este_palindrom(s: &str) -> bool {
+    let trim = s.trim().to_lowercase();
+    let trim_v2 = trim.replace(" ", ""); // elimină spațiile din mijloc
+    let vec_chars: Vec<char> = trim_v2.chars().collect();
+
+    if vec_chars.is_empty() {
+        return true;
+    }
+
+    let mut stanga: usize = 0;
+    let mut dreapta = vec_chars.len() - 1;
+
+    while stanga < dreapta {
+        if vec_chars[stanga] != vec_chars[dreapta] {
+            return false;
+        }
+        stanga += 1;
+        dreapta -= 1;
+    }
+
+    true
+}
+```
+
+🐛 **Bug comun**: guard-ul `is_empty()` trebuie pus **înainte** de `vec_chars.len() - 1`,
+altfel pe string gol `""` → `0 - 1` pe `usize` → panic (underflow).
+
+🔬 **Răspunsuri la întrebările de aprofundare:**
+
+**Complexitate:** N/2 comparații pentru un string de N caractere = **O(n)**.
+Fiecare caracter e comparat o singură dată (cei doi pointeri se întâlnesc la mijloc).
+
+**Ignorare spații:** `.replace(" ", "")` elimină toate spațiile înainte de comparație.
+`"Ana are era na"` → `"anaareerna"` → palindrom ✅
+
 ---
 
 ## Exercițiul 1.3: Numără fiecare caracter (fără HashMap!)

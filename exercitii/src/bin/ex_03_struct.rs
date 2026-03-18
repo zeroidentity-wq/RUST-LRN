@@ -17,7 +17,7 @@
 
 use rand::Rng;
 
-struct  Erou {
+struct Erou {
     nume: String,
     clasa: String,
     hp: i32,
@@ -30,11 +30,11 @@ impl Erou {
     //    Constructorul eroului. Valorile initiale:
     //    hp = 100, nivel = 1, inventar = gol.
     fn new(nume: &str, clasa: &str) -> Erou {
-        Erou{
+        Erou {
             nume: String::from(nume),
             clasa: String::from(clasa),
             hp: 100,
-            nivel : 1,
+            nivel: 1,
             inventar: Vec::new(),
         }
     }
@@ -43,7 +43,15 @@ impl Erou {
     //    Exemplu output:
     //    [Arthur | Warrior] HP: 100 | Nivel: 1 | Inventar: ["Excalibur", "Potion"]
     fn info(&self) {
-        println!("[{} | {}] HP: {} | Nivel: {} | Inventar: {:?}, putere_totala: {}", self.nume, self.clasa, self.hp, self.nivel, self.inventar, putere_totala(self));
+        println!(
+            "[{} | {}] HP: {} | Nivel: {} | Inventar: {:?}, putere_totala: {}",
+            self.nume,
+            self.clasa,
+            self.hp,
+            self.nivel,
+            self.inventar,
+            putere_totala(self)
+        );
     }
     // 3. pick_up(&mut self, item: String)
     //    Eroul preia ownership-ul unui item si il adauga in inventar.
@@ -79,7 +87,10 @@ impl Erou {
     //    Indiciu: Vec are metoda .iter(), .position() si .remove(index).
 
     fn use_potion(&mut self) {
-        let index = self.inventar.iter().position(|item| item.contains("Potion"));
+        let index = self
+            .inventar
+            .iter()
+            .position(|item| item.contains("Potion"));
         match index {
             Some(potiune) => {
                 self.inventar.remove(potiune);
@@ -89,11 +100,8 @@ impl Erou {
                 println!("Nu ai nici o poțiune in inventar!")
             }
         }
-
     }
-
 }
-
 
 // ============================================================
 // FUNCTII LIBERE (in afara impl)
@@ -117,12 +125,12 @@ fn putere_totala(erou: &Erou) -> i32 {
 
 fn ataca(atacator: &Erou, tinta: &mut Erou) {
     let damage = rand::thread_rng().gen_range(1..=20) * atacator.nivel; // intre 1 si 20 inclusiv
-    println!("{} ataca {} => {} damage.",atacator.nume, tinta.nume, damage);
+    println!(
+        "{} ataca {} => {} damage.",
+        atacator.nume, tinta.nume, damage
+    );
     tinta.take_damage(damage);
-
 }
-
-
 
 // ============================================================
 // MAIN — testeaza tot ce ai scris
@@ -144,5 +152,4 @@ fn main() {
     erou_2.info();
     erou_2.use_potion();
     erou_2.info();
-
 }

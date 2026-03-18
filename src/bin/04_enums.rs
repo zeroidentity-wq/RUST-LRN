@@ -25,8 +25,8 @@ enum Clasa {
 fn descrie_clasa(clasa: &Clasa) {
     match clasa {
         Clasa::Warrior => println!("Warrior: tanc si damage corp la corp"),
-        Clasa::Mage    => println!("Mage: damage magic, fragil"),
-        Clasa::Archer  => println!("Archer: damage de la distanta"),
+        Clasa::Mage => println!("Mage: damage magic, fragil"),
+        Clasa::Archer => println!("Archer: damage de la distanta"),
     }
 }
 
@@ -38,8 +38,8 @@ impl Clasa {
     fn bonus_damage(&self) -> i32 {
         match self {
             Clasa::Warrior => 10,
-            Clasa::Mage    => 25,
-            Clasa::Archer  => 15,
+            Clasa::Mage => 25,
+            Clasa::Archer => 15,
         }
     }
 }
@@ -51,17 +51,17 @@ impl Clasa {
 
 #[derive(Debug)]
 enum Item {
-    Sabie(i32),         // damage
-    Armura(i32),        // defense
-    Potion(i32),        // heal
-    QuestItem(String),  // nume quest
+    Sabie(i32),        // damage
+    Armura(i32),       // defense
+    Potion(i32),       // heal
+    QuestItem(String), // nume quest
 }
 
 fn descrie_item(item: &Item) {
     match item {
-        Item::Sabie(dmg)      => println!("Sabie — {} damage", dmg),
-        Item::Armura(def)     => println!("Armura — {} defense", def),
-        Item::Potion(heal)    => println!("Potion — vindeca {} HP", heal),
+        Item::Sabie(dmg) => println!("Sabie — {} damage", dmg),
+        Item::Armura(def) => println!("Armura — {} defense", def),
+        Item::Potion(heal) => println!("Potion — vindeca {} HP", heal),
         Item::QuestItem(nume) => println!("Quest item: {}", nume),
     }
 }
@@ -93,7 +93,7 @@ fn gaseste_sabie(inventar: &Vec<Item>) -> Option<i32> {
 #[derive(Debug)]
 struct Erou {
     nume: String,
-    clasa: Clasa,   // enum in loc de String
+    clasa: Clasa, // enum in loc de String
     hp: i32,
     inventar: Vec<Item>,
 }
@@ -102,15 +102,17 @@ impl Erou {
     fn new(nume: &str, clasa: Clasa) -> Erou {
         Erou {
             nume: String::from(nume),
-            clasa,          // shorthand: clasa: clasa
+            clasa, // shorthand: clasa: clasa
             hp: 100,
             inventar: Vec::new(),
         }
     }
 
     fn info(&self) {
-        println!("[{} | {:?}] HP: {} | Inventar: {:?}",
-            self.nume, self.clasa, self.hp, self.inventar);
+        println!(
+            "[{} | {:?}] HP: {} | Inventar: {:?}",
+            self.nume, self.clasa, self.hp, self.inventar
+        );
     }
 
     fn pick_up(&mut self, item: Item) {
@@ -119,9 +121,10 @@ impl Erou {
 
     fn use_potion(&mut self) {
         // Cautam primul Potion in inventar
-        let index = self.inventar.iter().position(|item| {
-            matches!(item, Item::Potion(_))
-        });
+        let index = self
+            .inventar
+            .iter()
+            .position(|item| matches!(item, Item::Potion(_)));
 
         match index {
             Some(i) => {
@@ -129,7 +132,10 @@ impl Erou {
                 let item = self.inventar.remove(i);
                 if let Item::Potion(heal) = item {
                     self.hp += heal;
-                    println!("{} foloseste o potion si recupereaza {} HP!", self.nume, heal);
+                    println!(
+                        "{} foloseste o potion si recupereaza {} HP!",
+                        self.nume, heal
+                    );
                 }
             }
             None => println!("Nu ai nicio potion in inventar!"),
@@ -139,9 +145,15 @@ impl Erou {
     fn damage_total(&self) -> i32 {
         // Bonus din clasa + damage din sabie (daca exista)
         let bonus_clasa = self.clasa.bonus_damage();
-        let bonus_sabie: i32 = self.inventar.iter()
+        let bonus_sabie: i32 = self
+            .inventar
+            .iter()
             .filter_map(|item| {
-                if let Item::Sabie(dmg) = item { Some(*dmg) } else { None }
+                if let Item::Sabie(dmg) = item {
+                    Some(*dmg)
+                } else {
+                    None
+                }
             })
             .sum();
         bonus_clasa + bonus_sabie
@@ -176,7 +188,7 @@ fn main() {
     println!();
     match gaseste_sabie(&items) {
         Some(dmg) => println!("Ai o sabie cu {} damage in inventar!", dmg),
-        None      => println!("Nu ai sabie."),
+        None => println!("Nu ai sabie."),
     }
 
     // 4. Struct cu enum

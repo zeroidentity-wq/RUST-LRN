@@ -21,8 +21,6 @@ fn main() {
     let mut titlu = String::from("NOOB");
     schimba_titlu(&mut titlu, "Intermediar");
     println!("Titlul nou este: {}", titlu);
-
-
 }
 
 // ---------------------------------------------------------------------------
@@ -38,7 +36,9 @@ fn main_s1a() {
     afiseaza(item.clone());
     println!("Am inca: {}", item); // pt ca aic item este deja drop din cauza functiei afiseaza
 }
-fn afiseaza(text: String) { println!("{}", text); }
+fn afiseaza(text: String) {
+    println!("{}", text);
+}
 
 // S1-B: Returneaza true daca inventarul eroului e gol (string-ul e gol)
 //       Exemplu: "" -> true, "Sabie" -> false
@@ -70,8 +70,7 @@ fn fa_majuscule(s: &mut String) {
 //       Exemplu: "Lord", "Arthur" -> "Lord Arthur"
 //       Indiciu: format!("{} {}", s1, s2)
 fn combina_titlu(s1: &String, s2: &String) -> String {
-    format!("{} {}",s1,s2)
-
+    format!("{} {}", s1, s2)
 }
 
 // S2-C: Functia de mai jos nu compileaza.
@@ -86,9 +85,8 @@ fn creeaza_item2() -> &'static str {
     "Sabie Ruginita"
 }
 
-
 // S2-D: functie schimba_titlu(titlu: &mut String, nou: &str)
 //
-fn schimba_titlu(titlu: &mut String, nou:&str) {
+fn schimba_titlu(titlu: &mut String, nou: &str) {
     *titlu = nou.to_string().to_uppercase();
 }
