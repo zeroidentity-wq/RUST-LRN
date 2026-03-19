@@ -305,6 +305,68 @@ de sortare existentă.
 - Există sortări mai rapide (merge sort, quick sort). De ce ar conta viteza
   dacă listele sunt mici?
 
+✅ **Soluție exercițiul 2.1:**
+
+```rust
+fn main() {
+    let mut v = vec![3, 2, 1, 4, 5];
+    bubble_sort(&mut v);
+    println!("{:?}", v); // acum funcționează — v nu e consumat
+}
+
+fn bubble_sort(vec: &mut Vec<i32>) {
+    let n = vec.len();
+    let mut swapped: bool;
+    // loop exterior — câte treceri complete
+    for i in 0..n-1 {
+        swapped = false;
+        // loop interior — nr de elemente - iteratia - 1
+        // (ultimele i elemente sunt deja sortate)
+        for j in 0..n-i-1 {
+            if vec[j] > vec[j+1] {
+                // swap tradițional cu variabilă temp
+                let temp = vec[j];
+                vec[j] = vec[j+1];
+                vec[j+1] = temp;
+                swapped = true;
+            }
+        }
+        // dacă nu s-a făcut niciun swap, lista e sortată
+        if !swapped {
+            break;
+        }
+    }
+    println!("{:?}", vec);
+}
+```
+
+🐛 **Bug comun — ownership**: `fn bubble_sort(mut vec: Vec<i32>)` consumă vectorul.
+Funcția primește ownership și `main` nu mai poate folosi `v` după apel.
+Soluția: `&mut Vec<i32>` — împrumut mutabil, funcția modifică vectorul original.
+
+🐛 **Bug comun — swap greșit**:
+```rust
+// GREȘIT — pierde datele!
+max = i;        // salvează INDEX-ul, nu valoarea
+vec[i+1] = max; // suprascrie vec[i+1]
+vec[i] = vec[i+1]; // acum vec[i+1] e deja modificat!
+
+// CORECT — swap cu temp
+let temp = vec[j];
+vec[j] = vec[j+1];
+vec[j+1] = temp;
+```
+
+🔬 **Răspunsuri la întrebările de aprofundare:**
+
+**Complexitate:** N-1 + N-2 + ... + 1 = N(N-1)/2 comparații = **O(n²)**.
+Optimizarea `n-i-1` în loop-ul interior e deja implementată — ultimele `i` elemente
+sunt garantat sortate după fiecare trecere, deci nu le mai comparăm.
+
+**De ce contează viteza chiar și pentru liste mici?** Dacă bubble sort rulează
+în interiorul altui algoritm (ex: pentru fiecare nod dintr-un graf), O(n²) se
+înmulțește cu dimensiunea grafului și devine rapid o problemă.
+
 ---
 
 ## Exercițiul 2.2: Căutare binară — manual
