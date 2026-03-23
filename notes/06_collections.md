@@ -77,7 +77,39 @@ hp.remove("Arthas")       // Option<i32>
 
 // Iterare
 for (cheie, valoare) in &hp { ... }
+
+// Iterare cu index
+for (i, (cheie, valoare)) in hp.iter().enumerate() { ... }
 ```
+
+### `iter()` si `enumerate()` pe HashMap
+
+`iter()` pe un HashMap returneaza **perechi `(&cheie, &valoare)`** — dar fara ordine garantata (HashMap-ul nu e sortat).
+
+`enumerate()` **impacheteaza** orice iterator si adauga un contor automat. Transforma fiecare element `X` in `(index, X)`:
+
+```
+hp.iter()            →  (&"Player1", &100), (&"Player2", &100), ...
+hp.iter().enumerate() →  (0, (&"Player1", &100)), (1, (&"Player2", &100)), ...
+```
+
+In bucla `for`, destructurezi ambele niveluri:
+
+```rust
+for (i, (nume, viata)) in hp.iter().enumerate() {
+    println!("{}: {} are {} HP", i, nume, viata);
+}
+// i     = usize (0, 1, 2...)
+// nume  = &String
+// viata = &i32
+```
+
+> **Atentie la tipuri**: `HashMap<String, i32>` asteapta cheie `String`.
+> `"Player1"` este `&str` — trebuie convertit:
+> ```rust
+> hp.insert("Player1".to_string(), 100);  // corect
+> // sau schimbi tipul in HashMap<&str, i32>
+> ```
 
 ### `entry` — insereaza doar daca nu exista
 
@@ -148,4 +180,110 @@ Rulare: `cargo run --bin ex_06_collections`
 
 ---
 
-*Nota: Fisier creat in sesiunea din 2026-03-17.*
+## Solutii si observatii (sesiunea 2026-03-23)
+
+### Ex1 — Vec: operatii de baza ✓
+
+```rust
+fn ex1() {
+    let mut v: Vec<String> = vec!["Albastros".to_string(), "Murish".to_string(), "Gablov".to_string()];
+    v.push(String::from("Cameros"));
+    for (i, player) in v.iter().enumerate() {
+        println!("Player {}: {}", i, player);
+    }
+    match v.pop() {
+        None => { println!("No player"); },
+        Some(scos) => { println!("Scos: {}", scos); },
+    }
+}
+```
+
+### Ex2 — Vec: acces sigur ✓
+
+```rust
+fn ex2() {
+    let v: Vec<String> = vec!["Albastros".to_string(), "Murish".to_string(), "Gablov".to_string()];
+    for (i, player) in v.iter().enumerate() {
+        println!("Player {}: {}", i, player);
+    }
+    match v.get(3) {
+        None => { println!("No player gasit la index 3."); },
+        Some(gasit) => { println!("Gasit: {}", gasit); },
+    }
+}
+```
+
+> `v.get(3)` returneaza `None` deoarece Vec-ul are 3 elemente (indecsi 0, 1, 2).
+
+### Ex3 — HashMap: registru de HP ✓
+
+```rust
+fn ex03() {
+    let mut hp: HashMap<String, i32> = HashMap::new();
+    hp.insert("Damos".to_string(), 100);
+    hp.insert("Galos".to_string(), 22);
+    hp.insert("Helios".to_string(), 55);
+
+    match hp.get("Dragon") {
+        None => { println!("No dragon"); },
+        Some(viata) => { println!("Dragon: {}", viata); },
+    }
+    match hp.get("Damos") {
+        None => { println!("No player found!"); },
+        Some(viata) => { println!("Player: Damos : {}", viata); },
+    }
+}
+```
+
+### Ex4 — HashMap: entry si modificare ✓
+
+```rust
+fn ex04() {
+    let mut hp: HashMap<String, i32> = HashMap::new();
+    hp.insert("Damos".to_string(), 100);
+    hp.insert("Galos".to_string(), 22);
+    hp.insert("Helios".to_string(), 55);
+
+    hp.entry("Davos".to_string()).or_insert(50);
+    hp.entry("Davos".to_string()).or_insert(50); // al doilea apel nu schimba nimic
+
+    match hp.remove("Davos") {
+        None => { println!("No player found!"); },
+        Some(scos) => { println!("Scos pe: {}", scos); },
+    }
+    for (i, (nume, viata)) in hp.iter().enumerate() {
+        println!("Player {i}: Nume: {nume}: HP: {viata}");
+    }
+}
+```
+
+> Destructurarea `(i, (nume, viata))` in `enumerate()` pe HashMap — `i` e indexul, `(nume, viata)` e perechea cheie-valoare.
+
+### Ex5 — Combinat: inventar + scor ✓
+
+```rust
+fn ex05() {
+    let mut rng = rand::thread_rng();
+    let inventar: Vec<&str> = vec!["Sabie", "Potiune", "Armura"];
+    let mut scoruri: HashMap<&str, i32> = HashMap::new();
+
+    // insereaza scoruri aleatoare per item
+    for item in inventar.iter() {
+        scoruri.insert(item, rng.gen_range(0..=100));
+    }
+
+    // afiseaza fiecare item cu scorul sau
+    for item in inventar.iter() {
+        match scoruri.get(item) {
+            None => { println!("Item: {}, Scor: necunoscut", item); }
+            Some(score) => { println!("Item: {}, Scor: {}", item, score); }
+        }
+    }
+}
+```
+
+> **Observatie**: scorurile se genereaza intr-un prim loop, afisarea se face intr-un al doilea loop separat — separarea responsabilitatilor.
+
+---
+
+*Nota: Fisier creat in sesiunea din 2026-03-17. Solutii adaugate in sesiunea din 2026-03-23.*
