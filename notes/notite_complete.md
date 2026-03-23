@@ -14,6 +14,8 @@
 10. [Generice, Option, Result, Vec](#cap10)
 11. [Șiruri de Caractere](#cap11)
 12. [OOP în Rust](#cap12)
+13. [Colecții: Vec și HashMap](#cap13)
+14. [Fisiere si I/O](#cap14)
 
 ---
 
@@ -1890,4 +1892,122 @@ impl Caine {
 - `Clone` — pentru `.clone()`
 - `Copy` — copiere automata
 - `Drop` — cleanup la sfarsit de scope
+
+---
+
+<h2 id="cap13">13. Colecții: Vec și HashMap</h2>
+
+```rust
+use std::collections::HashMap;  // Vec e in prelude, HashMap nu
+```
+
+### Vec\<T\> — lista dinamica
+
+```rust
+let mut v: Vec<i32> = Vec::new();
+let v2 = vec![1, 2, 3];          // macro cu valori initiale
+
+v.push(10);                       // adauga la sfarsit
+v.pop()                           // scoate ultimul → Option<T>
+v.remove(0)                       // scoate de la index → T
+v[0]                              // acces direct (panic daca invalid)
+v.get(0)                          // acces sigur → Option<&T>
+v.len()
+v.is_empty()
+
+for x in &v { }
+for (i, x) in v.iter().enumerate() { }
+```
+
+### HashMap\<K, V\> — dictionar cheie→valoare
+
+```rust
+let mut hp: HashMap<String, i32> = HashMap::new();
+
+hp.insert("Arthas".to_string(), 100);
+hp.get("Arthas")                          // Option<&V>
+hp.contains_key("Arthas")                // bool
+hp.remove("Arthas")                       // Option<V>
+
+// Insereaza doar daca cheia nu exista
+hp.entry("Zara".to_string()).or_insert(40);
+
+for (cheie, valoare) in &hp { }
+for (i, (cheie, valoare)) in hp.iter().enumerate() { }
+```
+
+> HashMap-ul **nu e ordonat** — ordinea iterarii nu e garantata.
+
+---
+
+<h2 id="cap14">14. Fisiere si I/O</h2>
+
+```rust
+use std::fs;
+use std::fs::OpenOptions;
+use std::io::{self, BufRead, Write};
+```
+
+### Scriere simpla
+
+```rust
+fs::write("fisier.txt", "continut").expect("Eroare");
+// Suprascrie daca fisierul exista deja
+```
+
+### Citire simpla
+
+```rust
+let text = fs::read_to_string("fisier.txt").expect("Eroare");
+```
+
+### Citire linie cu linie
+
+```rust
+let fisier = fs::File::open("fisier.txt").expect("Eroare");
+let reader = io::BufReader::new(fisier);
+
+for (i, linie) in reader.lines().enumerate() {
+    let linie = linie.expect("Eroare");
+    println!("Linie {}: {}", i + 1, linie);
+}
+```
+
+### Adaugare la sfarsit
+
+```rust
+let mut f = OpenOptions::new()
+    .append(true)
+    .open("fisier.txt")
+    .expect("Eroare");
+
+writeln!(f, "linie noua").expect("Eroare");
+```
+
+### Gestionare erori cu `?`
+
+```rust
+fn citeste(cale: &str) -> Result<String, io::Error> {
+    let continut = fs::read_to_string(cale)?;
+    Ok(continut)
+}
+```
+
+### Alte operatii utile
+
+```rust
+fs::remove_file("fisier.txt").ok();               // sterge
+std::path::Path::new("fisier.txt").exists()       // bool
+```
+
+### Rezumat
+
+| Operatie | Functie | Observatie |
+|----------|---------|------------|
+| Scriere | `fs::write(path, content)` | Suprascrie |
+| Citire tot | `fs::read_to_string(path)` | In String |
+| Citire linie | `BufReader` + `.lines()` | Eficient |
+| Adaugare | `OpenOptions::new().append(true)` | Nu suprascrie |
+| Stergere | `fs::remove_file(path)` | `Result` |
+| Existenta | `Path::new(path).exists()` | `bool` |
 - `Iterator` — pentru bucle `for`

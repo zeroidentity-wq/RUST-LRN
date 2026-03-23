@@ -1062,10 +1062,24 @@ use std::fs;
 // Citire completă
 let continut = fs::read_to_string("fisier.txt")?;
 
-// Citire linie cu linie
+// Citire linie cu linie din String
 for linie in continut.lines() {
     println!("{linie}");
 }
+
+// Citire linie cu linie din fisier (eficient pentru fisiere mari)
+use std::io::BufRead;
+let fisier = fs::File::open("fisier.txt")?;
+let reader = std::io::BufReader::new(fisier);
+for (i, linie) in reader.lines().enumerate() {
+    println!("Linie {}: {}", i + 1, linie?);
+}
+
+// Verificare existenta
+std::path::Path::new("fisier.txt").exists()  // bool
+
+// Stergere
+fs::remove_file("fisier.txt")?;
 
 // Scriere (suprascrie fișierul!)
 fs::write("output.txt", "Conținut nou")?;
