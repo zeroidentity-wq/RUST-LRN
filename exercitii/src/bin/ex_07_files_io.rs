@@ -3,7 +3,7 @@
 
 use std::fs;
 use std::fs::OpenOptions;
-use std::io::{self, BufRead, Write};
+use std::io::{self, BufRead, BufReader, Write};
 
 // ============================================================
 // EXERCITIUL 1 — Scriere si citire simpla
@@ -15,7 +15,13 @@ use std::io::{self, BufRead, Write};
 // ============================================================
 
 fn ex1() {
-    // TODO
+    fs::write("jucatori.txt", "Jucator 1\nJucator 2\nJucator 3\n").expect("Eroare la scriere.");
+    if std::path::Path::new("E:\\RustRoverProjects\\RUST-LRN\\jucatori.txt").exists() {
+        println!("fisier.txt exista;");
+    }
+    let continut = fs::read_to_string("E:\\RustRoverProjects\\RUST-LRN\\jucatori.txt").expect("Content not found.");
+    println!("Content :\n{}", continut);
+    println!("Nr total de caractere: {}", continut.chars().count());
 }
 
 // ============================================================
@@ -28,7 +34,12 @@ fn ex1() {
 // ============================================================
 
 fn ex2() {
-    // TODO
+    let fisier = fs::File::open("E:\\RustRoverProjects\\RUST-LRN\\jucatori.txt").expect("Nu am gasit fisierul!");
+    let reader = BufReader::new(fisier);
+    for (index, linie) in reader.lines().enumerate() {
+        let linie = linie.expect("Could not read line.");
+        println!("{} {}", index+1, linie);
+    }
 }
 
 // ============================================================
@@ -41,7 +52,14 @@ fn ex2() {
 // ============================================================
 
 fn ex3() {
-    // TODO
+    let mut f = OpenOptions::new().append(true).open("E:\\RustRoverProjects\\RUST-LRN\\jucatori.txt").expect("Nu am gasit fisier!");
+    match writeln!(f, "Jucator 4\nJucator 5") {
+        Ok(_) => {println!("S-a reusit scrierea!")}
+        Err(_) => {println!("Nu s-a reusit scrierea!")}
+    }
+    let continut = fs::read_to_string("E:\\RustRoverProjects\\RUST-LRN\\jucatori.txt").expect("Content not found.");
+    println!("{}", continut)
+
 }
 
 // ============================================================
