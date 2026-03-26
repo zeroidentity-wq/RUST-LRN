@@ -3,7 +3,7 @@
 
 use std::fs;
 use std::fs::OpenOptions;
-use std::io::{self, BufRead, BufReader, Write};
+use std::io::{self, BufRead, BufReader, Error, Write};
 
 // ============================================================
 // EXERCITIUL 1 — Scriere si citire simpla
@@ -76,12 +76,20 @@ fn ex3() {
 // ============================================================
 
 fn citeste_fisier(cale: &str) -> Result<String, io::Error> {
-    // TODO
-    todo!()
+    let continut = fs::read_to_string(&cale)?;
+    Ok(continut)
 }
 
 fn ex4() {
-    // TODO
+    match citeste_fisier("E:\\RustRoverProjects\\RUST-LRN\\jucatori.txt") {
+        Ok(citit) => {println!("{}", citit)}
+        Err(_) => {println!("Nu am gasit fisierul!")}
+    }
+    match citeste_fisier("E:\\RustRoverProjects\\RUST-LRN\\instructiuni.txt") {
+        Ok(citit) => {println!("{}", citit)}
+        Err(_) => {println!("Nu am gasit fisier!")}
+    }
+
 }
 
 // ============================================================
@@ -101,7 +109,27 @@ fn ex4() {
 fn ex5() {
     // Hint: "Albastros:150".split_once(':') returneaza Some(("Albastros", "150"))
     // Hint: "150".parse::<i32>() converteste &str in i32 — returneaza Result
-    // TODO
+    fs::write("scoruri.txt", "Albastros:50\nHoham:50\nKepolis:45\nKheops:45\n").expect("Eroare la scriere scoruri");
+    let fisier = fs::File::open("scoruri.txt").expect("Nu am gasit fisierul scoruri!");
+    let reader = BufReader::new(fisier);
+    for line in reader.lines() {
+        let line = line.expect("Could not read line.");
+        match line.split_once(':') {
+            None => {}
+            Some(pereche) => {
+                    let scor_parsat = pereche.1.parse::<i32>().expect("Nu am gasit perechement!");
+                println!("Jucator: {}| Scor: {}", pereche.0, scor_parsat);
+                }
+        }
+    }
+    match fs::remove_file("E:\\RustRoverProjects\\RUST-LRN\\jucatori.txt") {
+        Ok(_) => {println!("Am sters fisierul jucatori!");}
+        Err(_) => {println!("Nu am gasit fisierul!");}
+    }
+    match fs::remove_file("E:\\RustRoverProjects\\RUST-LRN\\scoruri.txt") {
+        Ok(_) => {println!("Am sters fisierul! scoruri");}
+        Err(_) => {println!("Nu am gasit fisierul!");}
+    }
 }
 
 fn main() {
