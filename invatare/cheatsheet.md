@@ -1294,3 +1294,110 @@ SCREAMING_SNAKE  → constante:                               const MAX_SIZE: u3
 
 ---
 
+# 22. CLOSURES
+
+Funcții anonime care pot **captura variabile din contextul în care au fost create**.
+
+## Sintaxă — closure vs funcție normală
+
+```rust
+fn aduna_cinci(x: i32) -> i32 { x + 5 }  // Funcție clasică — declarată separat
+let aduna_cinci = |x| x + 5;              // Closure echivalent — tipuri deduse automat
+
+println!("{}", aduna_cinci(10));           // 15 — apelul e identic
+```
+
+## Capturarea mediului (superputerea față de `fn`)
+
+```rust
+let taxa = 10;
+// Closure-ul "vede" taxa din context — fn clasică nu poate face asta
+let calculeaza = |pret| pret + taxa;
+println!("{}", calculeaza(50));            // 60
+```
+
+## Closure mutabil
+
+```rust
+let mut contor = 0;
+let mut incrementeaza = || { contor += 1; };  // mut pe closure = modifica ceva din afara
+incrementeaza(); // contor = 1
+incrementeaza(); // contor = 2
+```
+
+## Closure ca argument (cazul cel mai frecvent)
+
+```rust
+let v = vec![1, 2, 3, 4, 5];
+let duble: Vec<i32> = v.iter().map(|&x| x * 2).collect();   // [2, 4, 6, 8, 10]
+let pare:  Vec<&i32> = v.iter().filter(|&&x| x % 2 == 0).collect(); // [2, 4]
+```
+
+---
+
+# 23. ITERATORI — Aprofundat
+
+## Cele 3 moduri de intrare
+
+```rust
+let v = vec![1, 2, 3];
+v.iter()         // &T      — imprumut, v ramane valid
+v.iter_mut()     // &mut T  — modifica elementele in-place
+v.into_iter()    // T       — consuma v (nu mai exista dupa)
+```
+
+## Evaluare lenesa (lazy)
+
+Adaptoarele nu executa nimic — construiesc un plan. **Consumatorul porneste banda.**
+
+```rust
+let plan = v.iter().map(|x| x * 2).filter(|x| x > &2);  // nimic nu se executa inca
+let result: Vec<i32> = plan.collect();                    // ACUM ruleaza totul
+```
+
+## Adaptoare (lazy — returneaza un nou iterator)
+
+```rust
+.map(|&x| x * 2)              // transforma fiecare element
+.filter(|&&x| x % 2 == 0)     // pastreaza doar ce trece conditia
+.take(3)                       // primele 3 elemente
+.skip(2)                       // sare peste primele 2
+.enumerate()                   // adauga index: (usize, &T)
+.zip(alt_iter)                 // combina in perechi cu alt iterator: (T, U)
+.chain(alt_iter)               // concateneaza doi iteratori
+.for_each(|x| println!("{x}")) // executa o actiune fara rezultat
+```
+
+## Consumatori (eager — returneaza valoarea finala)
+
+```rust
+.collect::<Vec<_>>()           // aduna intr-o colectie (tip trebuie specificat)
+.count()                       // usize — numara elementele
+.sum::<i32>()                  // T — aduna valorile
+.any(|&x| x > 5)               // bool — cel putin unul trece conditia
+.all(|&x| x > 0)               // bool — toate trec conditia
+.find(|&&x| x > 3)             // Option<&T> — primul care trece
+.max() / .min()                // Option<&T>
+```
+
+## Range-uri ca iteratori (fara Vec)
+
+```rust
+let suma: i32           = (1..=100).sum();                           // 5050
+let patrate: Vec<i32>   = (1..=5).map(|x| x * x).collect();        // [1, 4, 9, 16, 25]
+let count               = (1..=100).filter(|x| x % 7 == 0).count(); // 14
+```
+
+## Stil idiomatic: iterator vs `for`
+
+```rust
+// FOR — spui CUM sa faca (imperativ)
+let mut result = Vec::new();
+for &x in &v { if x % 2 == 0 { result.push(x * x); } }
+
+// ITERATOR — spui CE vrei (declarativ, fara mut)
+let result: Vec<i32> = v.iter().filter(|&&x| x % 2 == 0).map(|&x| x * x).collect();
+```
+
+---
+
