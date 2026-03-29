@@ -498,6 +498,22 @@ let slice: &[i32] = &v[1..4];           // Elementele de la index 1, 2, 3
 ```rust
 let v = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+// STRATURI DE REFERINȚĂ — de ce &x vs &&x:
+// .iter() produce &T. Dar .map() și .filter() diferă:
+//   .map(|x| ...)    → x = &T    (primește elementul direct)
+//   .filter(|x| ...) → x = &&T   (primește referință LA referință)
+// Filter doar inspectează, nu consumă — de-asta ia & în plus.
+//
+// Vec<i32>  → .iter() → &i32  → .map(|x|)  x = &i32
+//                               → .filter(|x|)  x = &&i32
+// Vec<&str> → .iter() → &&str → .map(|x|)  x = &&str
+//                               → .filter(|x|)  x = &&&str
+//
+// Soluții pentru filter:
+//   .filter(|&&x| x > 2)    // destructurare în pattern
+//   .filter(|x| **x > 2)    // dereferențiere cu *
+//   .filter(|x| *x > 2)     // auto-deref (merge la comparații)
+
 // Fiecare metodă returnează un iterator NOU (nu modifică originalul)
 // .collect() la final materializează rezultatul într-o colecție
 
@@ -521,6 +537,21 @@ v.iter().any(|&x| x > 5);              // true (cel puțin unul > 5?)
 v.iter().all(|&x| x > 0);              // true (TOATE > 0?)
 v.iter().find(|&&x| x > 5);            // Some(6) — primul care satisface
 v.iter().position(|&x| x == 5);        // Some(4) — indexul primei apariții
+
+// .inspect() — debug fără a modifica elementul
+let duble_debug: Vec<i32> = v.iter()
+    .inspect(|x| println!("Inainte: {}", x))   // vede &i32
+    .map(|&x| x * 2)
+    .inspect(|x| println!("Dupa: {}", x))      // vede i32
+    .collect();
+
+// Closure cu bloc {} — mai multe operații într-un closure
+let cu_taxa: Vec<i32> = v.iter()
+    .map(|&x| {
+        println!("Procesez: {}", x);
+        x + 10  // ultima expresie FĂRĂ ; = valoarea returnată
+    })
+    .collect();
 
 // Înlănțuire complexă: "suma pătratelor numerelor pare"
 let rezultat: i32 = v.iter()

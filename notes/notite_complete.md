@@ -1421,6 +1421,24 @@ v.iter_mut()    // &mut T  — modifica in-place
 v.into_iter()   // T       — consuma v (v nu mai exista dupa)
 ```
 
+**Straturi de referinta (`&T` vs `&&T`):**
+
+`.iter()` da `&T`. Dar `.map()` si `.filter()` trateaza referinta diferit:
+
+```
+Vec<i32> → .iter() → &i32
+                       ├── .map(|x| ...)     → x = &i32   (direct)
+                       └── .filter(|x| ...)  → x = &&i32  (referinta la referinta)
+```
+
+`.filter()` ia referinta in plus pentru ca doar inspecteaza elementul, nu il consuma. Solutii:
+
+```rust
+.filter(|&&x| x > 2)     // destructurare in pattern
+.filter(|x| **x > 2)     // dereferentiere cu *
+.filter(|x| *x > 2)      // auto-deref (functioneaza la comparatii)
+```
+
 **Adaptoare (lazy):**
 
 ```rust
@@ -1431,6 +1449,16 @@ v.into_iter()   // T       — consuma v (v nu mai exista dupa)
 .enumerate()               // adauga index: (usize, &T)
 .zip(alt_iter)             // combina in perechi: (T, U)
 .chain(alt_iter)           // concateneaza doi iteratori
+.inspect(|x| println!("{}", x))  // debug — vede elementul fara sa-l modifice
+```
+
+**Closure cu bloc `{}`** — mai multe operatii intr-un closure:
+
+```rust
+.map(|x| {
+    println!("Procesez: {}", x);
+    x + taxa  // ultima expresie fara ; = valoarea returnata
+})
 ```
 
 **Consumatori (eager):**

@@ -21,6 +21,12 @@ fn ex1() {
     let preturi = vec![30, 75, 120, 5, 200];
 
     // scrie closure-ul si aplica-l pe lista de preturi
+    let pret_final: Vec<i32> = preturi.iter()
+        .map(|x| {
+            println!("{} ->> {}", x, x + taxa_transport);
+            x + taxa_transport
+        })
+        .collect();
 }
 
 // ============================================================

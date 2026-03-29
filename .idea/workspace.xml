@@ -18,7 +18,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70b4d873-7ee1-449a-bff9-1f941a6e1685" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exercitii/src/bin/ex_08_closures.rs" beforeDir="false" afterPath="$PROJECT_DIR$/exercitii/src/bin/ex_08_closures.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/invatare/cheatsheet.md" beforeDir="false" afterPath="$PROJECT_DIR$/invatare/cheatsheet.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notes/08_closures.md" beforeDir="false" afterPath="$PROJECT_DIR$/notes/08_closures.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/notes/notite_complete.md" beforeDir="false" afterPath="$PROJECT_DIR$/notes/notite_complete.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,6 +47,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Cargo.Run ex_07_files_io.executor": "Run",
+    "Cargo.Run ex_08_closures.executor": "Run",
+    "Cargo.doc.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -58,7 +63,25 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunAnythingCache">
+    <myKeys>
+      <visibility group="Cargo Commands" flag="true" />
+      <visibility group="Grunt" flag="true" />
+      <visibility group="Gulp" flag="true" />
+      <visibility group="HTTP Requests" flag="true" />
+      <visibility group="Node.js" flag="true" />
+      <visibility group="Recent projects" flag="true" />
+      <visibility group="Run Configurations" flag="true" />
+      <visibility group="npm" flag="true" />
+      <visibility group="pnpm" flag="true" />
+      <visibility group="wasm-pack commands" flag="true" />
+      <visibility group="yarn" flag="true" />
+    </myKeys>
+    <option name="myCommands">
+      <command value="cargo doc --open" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Cargo.Run ex_08_closures">
     <configuration name="Run ex_07_files_io" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="buildProfileId" value="dev" />
       <option name="command" value="run --package exercitii --bin ex_07_files_io" />
@@ -77,8 +100,45 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Run ex_08_closures" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="buildProfileId" value="dev" />
+      <option name="command" value="run --package exercitii --bin ex_08_closures" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="doc" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="doc --open" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Cargo.Run ex_08_closures" />
+        <item itemvalue="Cargo.doc" />
         <item itemvalue="Cargo.Run ex_07_files_io" />
       </list>
     </recent_temporary>
@@ -102,7 +162,8 @@
       <updated>1774379178562</updated>
       <workItem from="1774379180032" duration="4139000" />
       <workItem from="1774644003697" duration="2811000" />
-      <workItem from="1774691596117" duration="5932000" />
+      <workItem from="1774691596117" duration="9902000" />
+      <workItem from="1774799547251" duration="6193000" />
     </task>
     <servers />
   </component>

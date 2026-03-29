@@ -125,6 +125,48 @@ for x in v.iter_mut()  { /* x: &mut i32, poti modifica in-place */ }
 
 ---
 
+### De ce `&x` si `&&x`? — straturile de referinta
+
+`.iter()` produce `&T` (referinta). Dar `.map()` si `.filter()` trateaza acea referinta diferit:
+
+- **`.map()`** primeste elementul **direct** (il consuma/transforma) → `&T`
+- **`.filter()`** primeste o **referinta la element** (doar il inspecteaza, nu il consuma) → `&&T`
+
+```
+Vec<i32> → .iter() → &i32
+                       │
+                       ├── .map(|x| ...)     → x = &i32   (un strat)
+                       │
+                       └── .filter(|x| ...)  → x = &&i32  (doua straturi)
+```
+
+Daca colectia contine deja referinte (ex: `Vec<&str>`), se adauga inca un strat:
+
+```
+Vec<&str> → .iter() → &&str
+                        │
+                        ├── .map(|x| ...)     → x = &&str   (doua straturi)
+                        │
+                        └── .filter(|x| ...)  → x = &&&str  (trei straturi)
+```
+
+**Cum scapi de straturile extra?** Trei variante echivalente:
+
+```rust
+// 1. Destructurare in pattern (recomandat)
+.filter(|&&x| x > 2)     // &&x destructureaza &&i32 → x devine i32
+
+// 2. Dereferentiere cu *
+.filter(|x| **x > 2)     // **x: de la &&i32 la i32
+
+// 3. Auto-deref la comparatie (Rust e inteligent)
+.filter(|x| *x > 2)      // functioneaza pentru operatori ca >, ==, etc.
+```
+
+> **De retinut**: `.map()` transforma, deci primeste elementul direct. `.filter()` doar inspecteaza, deci ia o referinta in plus — de-asta apare `&&`.
+
+---
+
 ### Evaluare lenesa — cheia intelegerii
 
 > **Regula de aur**: Daca doar creezi un iterator si ii spui ce sa faca, el **nu va face absolut nimic** pana cand nu adaugi un consumator care sa "porneasca banda". Adaptoarele descriu planul; consumatorul il executa.
@@ -182,6 +224,25 @@ let perechi: Vec<(&&str, &i32)> = nume.iter().zip(scoruri.iter()).collect();
 ```rust
 let tot: Vec<&i32> = a.iter().chain(b.iter()).collect();
 ```
+
+`.inspect()` — "spioneaza" fiecare element fara sa-l modifice (util pentru debug):
+```rust
+let rezultat: Vec<i32> = preturi.iter()
+    .inspect(|x| println!("Inainte: {}", x))
+    .map(|x| x + taxa)
+    .inspect(|x| println!("Dupa: {}", x))
+    .collect();
+```
+> `.inspect()` primeste o referinta la element si returneaza elementul neschimbat. Poti pune `.inspect()` oriunde in lant.
+
+**Alternativa: closure cu bloc `{}`** — daca vrei sa faci mai multe operatii intr-un `.map()`:
+```rust
+.map(|x| {
+    println!("Procesez: {} -> {}", x, x + taxa);
+    x + taxa  // ultima expresie FARA ; = valoarea returnata
+})
+```
+> Ultimul rand fara `;` este valoarea pe care closure-ul o returneaza — exact ca la functii.
 
 ---
 
@@ -300,6 +361,7 @@ let count          = (1..=1000).filter(|x| x % 7 == 0).count(); // 142
 | `.enumerate()` | Adauga index `(usize, &T)` |
 | `.zip(iter)` | Combina in perechi `(T, U)` |
 | `.chain(iter)` | Concateneaza doi iteratori |
+| `.inspect(\|x\| ...)` | Debug — vizualizeaza elementul fara a-l modifica |
 
 ### Consumatori (eager)
 
