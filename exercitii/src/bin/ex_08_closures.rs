@@ -47,6 +47,12 @@ fn ex2() {
     let note = vec![3, 7, 5, 9, 2, 8, 4, 6, 10, 1];
 
     // scrie lantul de iteratori
+    let rezultat = note.iter()
+        .filter(|&&x| x > 5 )
+        .inspect(|x| println!("{}", x))
+        .map(|x| x * x)
+        .sum::<i32>();
+    println!("{}", rezultat);
 }
 
 // ============================================================
@@ -70,6 +76,7 @@ fn ex3() {
     let scoruri = vec![85, 42, 91, 67];
 
     // scrie zip + filter + collect, apoi afiseaza
+
 }
 
 // ============================================================
