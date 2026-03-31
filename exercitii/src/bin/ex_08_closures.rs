@@ -76,6 +76,10 @@ fn ex3() {
     let scoruri = vec![85, 42, 91, 67];
 
     // scrie zip + filter + collect, apoi afiseaza
+    let pereche:Vec<(_)> = nume.iter().zip(scoruri.iter().filter(|&&x| x >= 70 )).inspect(|(nume,scor)| {
+        println!("{} -> {}", nume,scor)
+    }).collect();
+
 
 }
 
