@@ -1,5 +1,5 @@
 [workspace]
-members = [".", "exercitii", "lowlevel"]
+members = [".", "exercitii", "lowlevel", "grrs"]
 
 [package]
 name = "RUST-LRN"

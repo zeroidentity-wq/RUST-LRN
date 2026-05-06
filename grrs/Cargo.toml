@@ -1,0 +1,15 @@
+[package]
+name = "grrs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.6.1", features = ["derive"]}
+anyhow = "1.0.102"
+ log = "0.4.29"
+env = "1.0.1"
+env_logger = "0.11.10"
+#log = {version = "0.4.29", features = ["debug", "log", "info"]}
+assert_cmd = "2.2.1"
+predicates = "3.1.4"
+

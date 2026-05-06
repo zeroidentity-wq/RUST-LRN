@@ -102,6 +102,8 @@ fn ex4() {
     let jucatori = vec!["Albastros", "Kepolis", "Hoham", "Murish", "Gavlos"];
 
     // scrie .iter().enumerate().take(3) si afiseaza
+    let top = jucatori.iter().enumerate().take(3);
+    println!("{:?}", top);
 }
 
 // ============================================================

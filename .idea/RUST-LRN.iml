@@ -6,6 +6,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/backend/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lowlevel/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/grrs/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/grrs/tests" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/grrs/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
