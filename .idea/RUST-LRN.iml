@@ -8,6 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/lowlevel/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/grrs/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/grrs/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/shell-rs/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/grrs/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>

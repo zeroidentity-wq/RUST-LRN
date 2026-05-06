@@ -11,23 +11,23 @@
       <package file="$PROJECT_DIR$/exercitii">
         <feature name="default" enabled="true" />
       </package>
+      <package file="$PROJECT_DIR$/grrs">
+        <feature name="default" enabled="true" />
+      </package>
       <package file="$PROJECT_DIR$/lowlevel">
+        <feature name="default" enabled="true" />
+      </package>
+      <package file="$PROJECT_DIR$/shell-rs">
         <feature name="default" enabled="true" />
       </package>
     </cargoProject>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70b4d873-7ee1-449a-bff9-1f941a6e1685" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/grrs/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/grrs/Cargo.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/grrs/Cargo.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/grrs/src/lib.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/grrs/src/main.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/grrs/test.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/grrs/tests/cli.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/RUST-LRN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/RUST-LRN.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exercitii/src/bin/ex_08_closures.rs" beforeDir="false" afterPath="$PROJECT_DIR$/exercitii/src/bin/ex_08_closures.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,51 +64,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Cargo.Run ex_07_files_io.executor&quot;: &quot;Run&quot;,
-    &quot;Cargo.Run ex_08_closures.executor&quot;: &quot;Run&quot;,
-    &quot;Cargo.doc.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/RustRoverProjects/RUST-LRN&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
-    &quot;org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon&quot;: &quot;&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Cargo.Run ex_07_files_io.executor": "Run",
+    "Cargo.Run ex_08_closures.executor": "Run",
+    "Cargo.Run shell-rs.executor": "Run",
+    "Cargo.doc.executor": "Run",
+    "Cargo.run.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.rust.reset.selective.auto.import": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "E:/RustRoverProjects/RUST-LRN",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
+    "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\RustRoverProjects\RUST-LRN" />
     </key>
   </component>
   <component name="RunAnythingCache">
-    <myKeys>
-      <visibility group="Cargo Commands" flag="true" />
-      <visibility group="Grunt" flag="true" />
-      <visibility group="Gulp" flag="true" />
-      <visibility group="HTTP Requests" flag="true" />
-      <visibility group="Node.js" flag="true" />
-      <visibility group="Recent projects" flag="true" />
-      <visibility group="Run Configurations" flag="true" />
-      <visibility group="npm" flag="true" />
-      <visibility group="pnpm" flag="true" />
-      <visibility group="wasm-pack commands" flag="true" />
-      <visibility group="yarn" flag="true" />
-    </myKeys>
     <option name="myCommands">
       <command value="cargo doc --open" />
+      <command value="cargo run " />
     </option>
   </component>
-  <component name="RunManager" selected="Cargo.Run ex_08_closures">
+  <component name="RunManager" selected="Cargo.Run shell-rs">
     <configuration name="Run ex_07_files_io" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="buildProfileId" value="dev" />
       <option name="command" value="run --package exercitii --bin ex_07_files_io" />
@@ -145,6 +135,23 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Run shell-rs" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="run --package shell-rs --bin shell-rs" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="doc" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="command" value="doc --open" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -162,8 +169,27 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
+    <configuration name="run" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="command" value="run" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Cargo.Run shell-rs" />
+        <item itemvalue="Cargo.run" />
         <item itemvalue="Cargo.Run ex_08_closures" />
         <item itemvalue="Cargo.doc" />
         <item itemvalue="Cargo.Run ex_07_files_io" />
@@ -197,7 +223,7 @@
       <workItem from="1776408512054" duration="7947000" />
       <workItem from="1776923046417" duration="568000" />
       <workItem from="1777983020719" duration="596000" />
-      <workItem from="1778054715766" duration="76000" />
+      <workItem from="1778054715766" duration="3182000" />
     </task>
     <servers />
   </component>
